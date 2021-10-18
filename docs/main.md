@@ -116,6 +116,8 @@ sudo ufw allow 'WWW Secure'
 
 ## DNS
 
+### Manager
+
 ```shell
 sudo apt update
 sudo apt install -y bind9 bind9utils
@@ -140,7 +142,7 @@ sudo tee /etc/bind/db.example.pojtinger <<EOT
 $ORIGIN example.pojtinger.
 $TTL 3600
 
-example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634567634 7200 3600 1209600 3600 )
+example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570712 7200 3600 1209600 3600 )
 
 example.pojtinger.      IN      NS      ns1.example.pojtinger.
 example.pojtinger.      IN      NS      ns2.example.pojtinger.
@@ -152,13 +154,41 @@ example.pojtinger.      IN      AAAA    2a03:b0c0:3:d0::e34:5001
 ns1.example.pojtinger.  IN      A       138.68.70.72
 ns1.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
 
-ns2.example.pojtinger.  IN      A       138.68.70.72
-ns2.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
+ns2.example.pojtinger.  IN      A       159.223.25.154
+ns2.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::1092:b001
 EOT
 
 sudo named-checkconf
 sudo named-checkzone example.pojtinger /etc/bind/db.example.pojtinger
 
+sudo systemctl reload named
+
+sudo ufw allow 'DNS'
+```
+
+### Worker
+
+```shell
+sudo apt update
+sudo apt install -y bind9 bind9utils
+sudo systemctl enable --now named
+
+sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
+version "not currently available";
+recursion no;
+querylog yes;
+allow-transfer { none; };
+
+sudo tee -a /etc/bind/named.conf.local <<EOT
+zone "example.pojtinger" {
+        type slave;
+        file "db.example.pojtinger";
+        allow-query { any; };
+        masters { 138.68.70.72; };
+};
+EOT
+
+sudo named-checkconf
 sudo systemctl reload named
 
 sudo ufw allow 'DNS'
