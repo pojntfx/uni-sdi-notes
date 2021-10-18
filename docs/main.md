@@ -111,4 +111,55 @@ cockpit.felicitass-sdi1.alphahorizon.io {
 EOT
 sudo systemctl enable --now caddy
 sudo systemctl reload caddy # Now visit https://cockpit.felicitass-sdi1.alphahorizon.io/
+sudo ufw allow 'WWW Secure'
+```
+
+## DNS
+
+```shell
+sudo apt update
+sudo apt install -y bind9 bind9utils
+sudo systemctl enable --now named
+
+sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
+version "not currently available";
+recursion no;
+querylog yes;
+allow-transfer { none; };
+
+sudo tee -a /etc/bind/named.conf.local <<EOT
+zone "example.pojtinger" {
+      type master;
+      file "/etc/bind/db.example.pojtinger";
+      allow-query { any; };
+      allow-transfer { 159.223.25.154; };
+};
+EOT
+
+sudo tee /etc/bind/db.example.pojtinger <<EOT
+$ORIGIN example.pojtinger.
+$TTL 3600
+
+example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634567634 7200 3600 1209600 3600 )
+
+example.pojtinger.      IN      NS      ns1.example.pojtinger.
+example.pojtinger.      IN      NS      ns2.example.pojtinger.
+
+
+example.pojtinger.      IN      A       138.68.70.72
+example.pojtinger.      IN      AAAA    2a03:b0c0:3:d0::e34:5001
+
+ns1.example.pojtinger.  IN      A       138.68.70.72
+ns1.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
+
+ns2.example.pojtinger.  IN      A       138.68.70.72
+ns2.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
+EOT
+
+sudo named-checkconf
+sudo named-checkzone example.pojtinger /etc/bind/db.example.pojtinger
+
+sudo systemctl reload named
+
+sudo ufw allow 'DNS'
 ```
