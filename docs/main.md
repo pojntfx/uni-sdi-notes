@@ -134,19 +134,19 @@ zone "example.pojtinger" {
       type master;
       file "/etc/bind/db.example.pojtinger";
       allow-query { any; };
-      allow-transfer { 159.223.25.154; };
+      allow-transfer { 159.223.25.154; 2a03:b0c0:3:d0::1092:b001; };
 };
 EOT
 
+# Increase `1634570712` by one and reload after each change to propagate changes to the worker
 sudo tee /etc/bind/db.example.pojtinger <<EOT
-$ORIGIN example.pojtinger.
-$TTL 3600
+\$ORIGIN example.pojtinger.
+\$TTL 3600
 
 example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570712 7200 3600 1209600 3600 )
 
 example.pojtinger.      IN      NS      ns1.example.pojtinger.
 example.pojtinger.      IN      NS      ns2.example.pojtinger.
-
 
 example.pojtinger.      IN      A       138.68.70.72
 example.pojtinger.      IN      AAAA    2a03:b0c0:3:d0::e34:5001
@@ -156,6 +156,9 @@ ns1.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
 
 ns2.example.pojtinger.  IN      A       159.223.25.154
 ns2.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::1092:b001
+
+example.pojtinger.      IN      MX      1       fb.mail.gandi.net.
+www.example.pojtinger.  IN      CNAME   example.pojtinger.
 EOT
 
 sudo named-checkconf
@@ -184,7 +187,7 @@ zone "example.pojtinger" {
         type slave;
         file "db.example.pojtinger";
         allow-query { any; };
-        masters { 138.68.70.72; };
+        masters { 138.68.70.72; 2a03:b0c0:3:d0::e34:5001; };
 };
 EOT
 
@@ -192,4 +195,29 @@ sudo named-checkconf
 sudo systemctl reload named
 
 sudo ufw allow 'DNS'
+```
+
+### Exercises
+
+**Use the dig command to query A/CNAME/MX/NS records from various machines / domains of your choice. Then execute reverse lookups as well.**
+
+```shell
+# Manager server
+$ dig +noall +answer @138.68.70.72 example.pojtinger A
+example.pojtinger.      3600    IN      A       138.68.70.72
+$ dig +noall +answer @138.68.70.72 example.pojtinger AAAA
+example.pojtinger.      3600    IN      AAAA    2a03:b0c0:3:d0::e34:5001
+
+# Worker server
+$ dig +noall +answer @159.223.25.154 example.pojtinger A
+example.pojtinger.      3600    IN      A       138.68.70.72
+$ dig +noall +answer @159.223.25.154 example.pojtinger AAAA
+example.pojtinger.      3600    IN      AAAA    2a03:b0c0:3:d0::e34:5001
+$ dig +noall +answer @159.223.25.154 example.pojtinger NS
+example.pojtinger.      3600    IN      NS      ns1.example.pojtinger.
+example.pojtinger.      3600    IN      NS      ns2.example.pojtinger.
+$ dig +noall +answer @159.223.25.154 example.pojtinger MX
+example.pojtinger.      3600    IN      MX      1 fb.mail.gandi.net.
+$ dig +noall +answer @159.223.25.154 www.example.pojtinger CNAME
+www.example.pojtinger.  3600    IN      CNAME   example.pojtinger.
 ```
