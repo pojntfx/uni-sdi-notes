@@ -27,10 +27,25 @@ Uni Software Defined Infrastructure Notes (c) 2021 Felix Pojtinger and contribut
 SPDX-License-Identifier: AGPL-3.0
 \newpage
 
+## Hosts
+
+Add the following A and AAAA records to a public DNS server (with root domain `alphahorizon.io`):
+
+```zone
+felixs-sdi1     10800   IN      A       138.68.70.72
+felixs-sdi1     10800   IN      AAAA    2a03:b0c0:3:d0::e34:5001
+*.felixs-sdi1   10800   IN      A       138.68.70.72
+*.felixs-sdi1   10800   IN      AAAA    2a03:b0c0:3:d0::e34:5001
+felixs-sdi2     10800   IN      A       159.223.25.154
+felixs-sdi2     10800   IN      AAAA    2a03:b0c0:3:d0::1092:b001
+*.felixs-sdi2   10800   IN      A       159.223.25.154
+*.felixs-sdi2   10800   IN      AAAA    2a03:b0c0:3:d0::1092:b001
+```
+
 ## User
 
 ```shell
-ssh root@138.68.70.72
+ssh root@felixs-sdi1.alphahorizon.io
 adduser pojntfx
 usermod -aG sudo pojntfx
 su pojntfx
@@ -52,7 +67,7 @@ exit
 ## UFW
 
 ```shell
-ssh pojntfx@138.68.70.72
+ssh pojntfx@felixs-sdi1.alphahorizon.io
 sudo apt update
 sudo apt install -y ufw
 sudo systemctl enable --now ufw
@@ -108,10 +123,14 @@ cockpit.felixs-sdi1.alphahorizon.io {
 		}
 	}
 }
+
+ldap.felixs-sdi1.alphahorizon.io {
+        respond "Site not served from here"
+}
 EOT
 sudo systemctl enable --now caddy
-sudo systemctl reload caddy # Now visit https://cockpit.felixs-sdi1.alphahorizon.io/
-sudo ufw allow 'WWW Secure'
+sudo systemctl reload caddy
+sudo ufw allow 'WWW Secure' # Now visit https://cockpit.felixs-sdi1.alphahorizon.io/
 ```
 
 ## DNS
@@ -305,4 +324,23 @@ felix.pojtinger.com.    123     IN      CNAME   cname.vercel-dns.com.
 # Get MX record
 $ dig +noall +answer @159.223.25.154 example.pojtinger MX
 example.pojtinger.      3600    IN      MX      1 fb.mail.gandi.net.
+```
+
+## LDAP
+
+```shell
+sudo apt update
+sudo apt install -y slapd ldap-utils certbot
+
+sudo dpkg-reconfigure slapd # ldap.felixs-sdi1.alphahorizon.io, felixs-sdi1
+
+sudo ufw allow 'LDAPS' # TODO: Setup certbot
+
+export CERT_LOCATION="$(sudo bash -c 'find /var/lib/caddy/.local/share/caddy/certificates/*/ldap.felixs-sdi1.alphahorizon.io | grep .crt\$')"
+export KEY_LOCATION="$(sudo bash -c 'find /var/lib/caddy/.local/share/caddy/certificates/*/ldap.felixs-sdi1.alphahorizon.io | grep .key\$')"
+
+sudo mkdir -p /etc/openldap
+sudo tee -a /etc/openldap/slapd.conf <<EOT
+# TODO: Chown/ln and use CERT_LOCATION and KEY_LOCATION for `slapd`'s TLS config according to https://www.edvpfau.de/openldap-mit-letsencrypt-zertifikat-verwenden/
+EOT
 ```
