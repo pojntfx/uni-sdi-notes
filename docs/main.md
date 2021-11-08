@@ -258,28 +258,51 @@ sudo ufw allow 'DNS'
 
 ### Exercises
 
-**Use the dig command to query A/CNAME/MX/NS records from various machines / domains of your choice. Then execute reverse lookups as well.**
+**Use the dig command to query A/CNAME/MX/NS records from various machines/domains of your choice. Then execute reverse lookups as well.**
 
 ```shell
-# Manager server
+# Get A/AAA records from manager server
 $ dig +noall +answer @138.68.70.72 example.pojtinger A
 example.pojtinger.      3600    IN      A       138.68.70.72
 $ dig +noall +answer @138.68.70.72 example.pojtinger AAAA
 example.pojtinger.      3600    IN      AAAA    2a03:b0c0:3:d0::e34:5001
 
-# Worker server
+# Get A/AAAA records from worker server
 $ dig +noall +answer @159.223.25.154 example.pojtinger A
 example.pojtinger.      3600    IN      A       138.68.70.72
 $ dig +noall +answer @159.223.25.154 example.pojtinger AAAA
 example.pojtinger.      3600    IN      AAAA    2a03:b0c0:3:d0::e34:5001
+
+# Get NS record
 $ dig +noall +answer @159.223.25.154 example.pojtinger NS
 example.pojtinger.      3600    IN      NS      ns1.example.pojtinger.
 example.pojtinger.      3600    IN      NS      ns2.example.pojtinger.
-$ dig +noall +answer @159.223.25.154 example.pojtinger MX
-example.pojtinger.      3600    IN      MX      1 fb.mail.gandi.net.
+
+# Get CNAME record
 $ dig +noall +answer @159.223.25.154 www.example.pojtinger CNAME
 www.example.pojtinger.  3600    IN      CNAME   example.pojtinger.
+
+# Do IPv4 reverse lookup
 $ dig +short @159.223.25.154 -x 138.68.70.72
 example.pojtinger.
+
+# Do IPv6 reverse lookup
 $ dig +short @159.223.25.154 -x '2a03:b0c0:3:d0::e34:5001'
+example.pojtinger.
+```
+
+**Enable recursive queries to parent nameservers enabling your nameserver to resolve external machines like www.w3.org by delegation.**
+
+```shell
+# Get AAAA record for felicitas.pojtinger.com using parent nameservers
+$ dig +noall +answer @159.223.25.154 felicitas.pojtinger.com AAAA
+felicitas.pojtinger.com.    123     IN      CNAME   cname.vercel-dns.com.
+```
+
+**Provide a mail exchange record pointing to mx1.hdm-stuttgart.de. Test this configuration using dig accordingly.**
+
+```shell
+# Get MX record
+$ dig +noall +answer @159.223.25.154 example.pojtinger MX
+example.pojtinger.      3600    IN      MX      1 fb.mail.gandi.net.
 ```
