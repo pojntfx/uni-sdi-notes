@@ -105,6 +105,12 @@ $ sudo systemctl enable --now docker
 $ sudo mkdir -p /etc/traefik
 $ sudo tee /etc/traefik/traefik.yaml<<'EOT'
 entryPoints:
+  dnsTcp:
+    address: ":53"
+
+  dnsUdp:
+    address: ":53/udp"
+
   web:
     address: ":80"
 
@@ -134,8 +140,25 @@ log:
   level: INFO
 EOT
 $ sudo tee /etc/traefik/services.yaml<<'EOT'
+udp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsUdp
+      service: dns
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+
 tcp:
   routers:
+    dns:
+      entryPoints:
+        - dnsTcp
+      rule: HostSNI(`*`)
+      service: dns
     ssh:
       entryPoints:
         - websecurealt
@@ -160,6 +183,10 @@ tcp:
         domains:
           - main: ldap.felicitass-sdi1.alphahorizon.io
   services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
     ssh:
       loadBalancer:
         servers:
@@ -210,6 +237,7 @@ tcp:
       insecureSkipVerify: true
 EOT
 $ sudo docker run -d --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik:v2.5
+$ sudo ufw allow 'DNS'
 $ sudo ufw allow 'WWW'
 $ sudo ufw allow 'WWW Secure' # Now visit https://cockpit.felicitass-sdi1.alphahorizon.io/
 $ sudo ufw allow '8443/tcp'
@@ -236,6 +264,9 @@ sudo apt install -y bind9 bind9utils
 sudo systemctl enable --now named
 
 sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
+listen-on port 54 { 127.0.0.1; };
+listen-on-v6 port 54 { ::1; };
+
 version "not currently available";
 recursion yes;
 querylog yes;
@@ -321,8 +352,6 @@ sudo named-checkzone 70.68.138.in-addr.arpa. /etc/bind/db.70.68.138
 sudo named-checkzone 1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa. /etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2
 
 sudo systemctl reload named
-
-sudo ufw allow 'DNS'
 ```
 
 ### Worker
@@ -333,6 +362,9 @@ sudo apt install -y bind9 bind9utils
 sudo systemctl enable --now named
 
 sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
+listen-on port 54 { 127.0.0.1; };
+listen-on-v6 port 54 { ::1; };
+
 version "not currently available";
 recursion yes;
 querylog yes;
@@ -364,8 +396,6 @@ EOT
 
 sudo named-checkconf
 sudo systemctl reload named
-
-sudo ufw allow 'DNS'
 ```
 
 ### Exercises
