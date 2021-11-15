@@ -196,17 +196,17 @@ tcp:
         servers:
           - address: localhost:389
 
-  http:
-    routers:
-      cockpit:
-        rule: Host(`cockpit.felicitass-sdi1.alphahorizon.io`)
-        tls:
-          certResolver: letsencrypt
-          domains:
-            - main: cockpit.felicitass-sdi1.alphahorizon.io
-        service: cockpit
-        entryPoints:
-          - websecure
+http:
+  routers:
+    cockpit:
+      rule: Host(`cockpit.felicitass-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: cockpit.felicitass-sdi1.alphahorizon.io
+      service: cockpit
+      entryPoints:
+        - websecure
     dashboard:
       rule: Host(`traefik.felicitass-sdi1.alphahorizon.io`)
       tls:
@@ -223,7 +223,7 @@ tcp:
     dashboard:
       basicauth:
         users:
-          - 'admin:$apr1$wBh8VM6G$bhZ82XpyH3mX4ha9XBbcL1' # htpasswd -nb admin asdf
+          - "admin:$apr1$wBh8VM6G$bhZ82XpyH3mX4ha9XBbcL1" # htpasswd -nb admin asdf
 
   services:
     cockpit:
@@ -457,13 +457,7 @@ sudo apt install -y slapd ldap-utils certbot
 
 sudo dpkg-reconfigure slapd # ldap.felicitass-sdi1.alphahorizon.io, felicitass-sdi1
 
-sudo ufw allow 'LDAPS' # TODO: Setup certbot
+curl ldaps://ldap.felicitass-sdi1.alphahorizon.io:443 # Test the connection
 
-export CERT_LOCATION="$(sudo bash -c 'find /var/lib/caddy/.local/share/caddy/certificates/*/ldap.felicitass-sdi1.alphahorizon.io | grep .crt\$')"
-export KEY_LOCATION="$(sudo bash -c 'find /var/lib/caddy/.local/share/caddy/certificates/*/ldap.felicitass-sdi1.alphahorizon.io | grep .key\$')"
-
-sudo mkdir -p /etc/openldap
-sudo tee -a /etc/openldap/slapd.conf <<EOT
-# TODO: Chown/ln and use CERT_LOCATION and KEY_LOCATION for `slapd`'s TLS config according to https://www.edvpfau.de/openldap-mit-letsencrypt-zertifikat-verwenden/
-EOT
+# TODO: Set up a local tunnel with http://www.dest-unreach.org/socat/doc/socat-openssltunnel.html to connect with Apache Directory Studio as the latter does not send a SNI header
 ```
