@@ -96,41 +96,134 @@ sudo unattended-upgrades --debug # Test the configuration; this will install the
 sudo reboot # If required
 ```
 
+## Traefik
+
+```shell
+$ sudo apt update
+$ sudo apt install -y docker.io
+$ sudo systemctl enable --now docker
+$ sudo mkdir -p /etc/traefik
+$ sudo tee /etc/traefik/traefik.yaml<<'EOT'
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+
+  websecurealt:
+    address: ":8443"
+
+providers:
+  file:
+    filename: /etc/traefik/services.yaml
+    watch: true
+
+api:
+  dashboard: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: felicitas@pojtinger.com
+      storage: /var/lib/traefik/acme.json
+      httpChallenge:
+        entryPoint: web
+
+log:
+  level: INFO
+EOT
+$ sudo tee /etc/traefik/services.yaml<<'EOT'
+tcp:
+  routers:
+    ssh:
+      entryPoints:
+        - websecurealt
+      rule: HostSNI(`*`)
+      service: ssh
+    sshOverTLS:
+      entryPoints:
+        - websecure
+      rule: HostSNI(`ssh.felicitass-sdi1.alphahorizon.io`)
+      service: ssh
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ssh.felicitass-sdi1.alphahorizon.io
+    ldap:
+      entryPoints:
+        - websecure
+      rule: HostSNI(`ldap.felicitass-sdi1.alphahorizon.io`)
+      service: ldap
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ldap.felicitass-sdi1.alphahorizon.io
+  services:
+    ssh:
+      loadBalancer:
+        servers:
+          - address: localhost:22
+    ldap:
+      loadBalancer:
+        servers:
+          - address: localhost:389
+
+  http:
+    routers:
+      cockpit:
+        rule: Host(`cockpit.felicitass-sdi1.alphahorizon.io`)
+        tls:
+          certResolver: letsencrypt
+          domains:
+            - main: cockpit.felicitass-sdi1.alphahorizon.io
+        service: cockpit
+        entryPoints:
+          - websecure
+    dashboard:
+      rule: Host(`traefik.felicitass-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: traefik.felicitass-sdi1.alphahorizon.io
+      service: api@internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - dashboard
+
+  middlewares:
+    dashboard:
+      basicauth:
+        users:
+          - 'admin:$apr1$wBh8VM6G$bhZ82XpyH3mX4ha9XBbcL1' # htpasswd -nb admin asdf
+
+  services:
+    cockpit:
+      loadBalancer:
+        serversTransport: cockpit
+        servers:
+          - url: https://localhost:9090
+
+  serversTransports:
+    cockpit:
+      insecureSkipVerify: true
+EOT
+$ sudo docker run -d --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik:v2.5
+$ sudo ufw allow 'WWW'
+$ sudo ufw allow 'WWW Secure' # Now visit https://cockpit.felicitass-sdi1.alphahorizon.io/
+$ sudo ufw allow '8443/tcp'
+$ ssh pojntfx@felicitass-sdi1.alphahorizon.io # Connect using SSH without Traefik
+$ ssh -p 8443 pojntfx@felicitass-sdi1.alphahorizon.io # Connect using SSH over Traefik without TLS
+$ ssh -o ProxyCommand="openssl s_client -connect ssh.felicitass-sdi1.alphahorizon.io:443 -quiet" pojntfx # Connect using SSH over Traefik with TLS
+```
+
 ## Cockpit
 
 ```shell
 echo 'deb http://deb.debian.org/debian bullseye-backports main' | sudo tee /etc/apt/sources.list.d/backports.list
 sudo apt update
 sudo apt install -t bullseye-backports -y cockpit
-```
-
-## Caddy
-
-```shell
-curl -L 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
-curl -L 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-sudo apt update
-sudo apt install -y caddy
-sudo tee /etc/caddy/Caddyfile <<EOT
-{
-        email felicitas@pojtinger.com
-}
-
-cockpit.felicitass-sdi1.alphahorizon.io {
-        reverse_proxy https://localhost:9090 {
-	        transport http {
-		        tls_insecure_skip_verify
-		}
-	}
-}
-
-ldap.felicitass-sdi1.alphahorizon.io {
-        respond "Site not served from here"
-}
-EOT
-sudo systemctl enable --now caddy
-sudo systemctl reload caddy
-sudo ufw allow 'WWW Secure' # Now visit https://cockpit.felicitass-sdi1.alphahorizon.io/
 ```
 
 ## DNS
