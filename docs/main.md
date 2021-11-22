@@ -273,7 +273,7 @@ querylog yes;
 allow-transfer { none; };
 allow-query { any; };
 
-sudo tee -a /etc/bind/named.conf.local <<EOT
+sudo tee -a /etc/bind/named.conf.local <<'EOT'
 zone "example.pojtinger" {
         type master;
         file "/etc/bind/db.example.pojtinger";
@@ -297,9 +297,9 @@ zone "1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa" 
 EOT
 
 # Increase `1634570712` by one and reload after each change to propagate changes to the worker
-sudo tee /etc/bind/db.example.pojtinger <<EOT
-\$ORIGIN example.pojtinger.
-\$TTL 3600
+sudo tee /etc/bind/db.example.pojtinger <<'EOT'
+$ORIGIN example.pojtinger.
+$TTL 3600
 
 example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570712 7200 3600 1209600 3600 )
 
@@ -320,9 +320,9 @@ www.example.pojtinger.  IN      CNAME   example.pojtinger.
 EOT
 
 # Increase `1634570724` by one and reload after each change to propagate changes to the worker
-sudo tee /etc/bind/db.70.68.138 <<EOT
-\$ORIGIN 70.68.138.in-addr.arpa.
-\$TTL 3600
+sudo tee /etc/bind/db.70.68.138 <<'EOT'
+$ORIGIN 70.68.138.in-addr.arpa.
+$TTL 3600
 
 @       IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570724 7200 3600 1209600 3600 )
 
@@ -333,9 +333,9 @@ sudo tee /etc/bind/db.70.68.138 <<EOT
 EOT
 
 # Increase `1634570724` by one and reload after each change to propagate changes to the worker
-sudo tee /etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2 <<EOT
-\$ORIGIN 1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa.
-\$TTL 3600
+sudo tee /etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2 <<'EOT'
+$ORIGIN 1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa.
+$TTL 3600
 
 @       IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570724 7200 3600 1209600 3600 )
 
@@ -371,7 +371,7 @@ querylog yes;
 allow-transfer { none; };
 allow-query { any; };
 
-sudo tee -a /etc/bind/named.conf.local <<EOT
+sudo tee -a /etc/bind/named.conf.local <<'EOT'
 zone "example.pojtinger" {
         type slave;
         file "db.example.pojtinger";
@@ -461,4 +461,163 @@ curl ldaps://ldap.felicitass-sdi1.alphahorizon.io:443 # Test the connection
 
 socat tcp-listen:8389,fork openssl:ldap.felicitass-sdi1.alphahorizon.io:443 # Run this on the local system to connect with Apache Directory Studio as the latter does not send a SNI header/is not TLS compliant
 curl ldap://localhost:8389 # Test the proxy's connection
+
+# Connect in Apache Directory Studio with the following info:
+# Hostname: localhost
+# Port: 8389
+# Bind DN or user: cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+# Bind password: The password from `sudo dpkg-reconfigure slapd`
+
+# Connect with ldapwhoami like so:
+ldapwhoami -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -x # Anonymous
+ldapwhoami -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io # As admin
+
+# Now add the objects:
+ldapadd -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io -f extended.ldif  <<'EOT'
+version: 1
+
+dn: dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: ldap
+o: felicitass-sdi1
+
+# We already set this up using `dpkg-reconfigure`
+# dn: cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+# objectClass: organizationalRole
+# objectClass: simpleSecurityObject
+# cn: admin
+# userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q=
+# description: LDAP administrator
+
+dn: ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: departments
+
+dn: ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: software
+
+dn: ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: financial
+
+dn: ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: devel
+
+dn: ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: testing
+
+dn: uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Audrey Bean
+sn: Bean
+givenName: Audrey
+mail: bean@ldap.felicitass-sdi1.alphahorizon.io
+uid: bean
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=smith,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+mail: smith@ldap.felicitass-sdi1.alphahorizon.io
+uid: smith
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=waibel,ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Jakob Waibel
+gidNumber: 100
+homeDirectory: /usr/jakob
+sn: Waibel
+uid: waibel
+uidNumber: 1337
+givenName: Jakob
+mail: waibel@ldap.felicitass-sdi1.alphahorizon.io
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=simpson,ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Homer Simpson
+sn: Simpson
+givenName: Homer
+mail: simpson@ldap.felicitass-sdi1.alphahorizon.io
+uid: simpson
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=pojtinger,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Felicitas Pojtinger
+sn: Pojtinger
+givenName: Felicitas
+mail: pojtinger@ldap.felicitass-sdi1.alphahorizon.io
+uid: pojtinger
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=simpson,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Maggie Simpson
+sn: Simpson
+givenName: Maggie
+mail: simpson@ldap.felicitass-sdi1.alphahorizon.io
+uid: simpson
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=aleimut,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Adelheit Aleimut
+sn: Aleimut
+givenName: Adelheit
+mail: aleimut@ldap.felicitass-sdi1.alphahorizon.io
+uid: aleimut
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=tibbie,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Oswald Tibbie
+gidNumber: 100
+homeDirectory: /usr/oswald
+sn: Tibbie
+uid: tibbie
+uidNumber: 1234
+givenName: Oswald
+mail: tibbie@ldap.felicitass-sdi1.alphahorizon.io
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+EOT
 ```
