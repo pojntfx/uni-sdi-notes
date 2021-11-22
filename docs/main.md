@@ -459,5 +459,6 @@ sudo dpkg-reconfigure slapd # ldap.felixs-sdi1.alphahorizon.io, felixs-sdi1
 
 curl ldaps://ldap.felixs-sdi1.alphahorizon.io:443 # Test the connection
 
-# TODO: Set up a local tunnel with http://www.dest-unreach.org/socat/doc/socat-openssltunnel.html to connect with Apache Directory Studio as the latter does not send a SNI header
+socat tcp-listen:8389,fork openssl:ldap.felixs-sdi1.alphahorizon.io:443 # Run this on the local system to connect with Apache Directory Studio as the latter does not send a SNI header/is not TLS compliant
+curl ldap://localhost:8389 # Test the proxy's connection
 ```
