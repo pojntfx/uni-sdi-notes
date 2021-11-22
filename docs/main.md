@@ -207,6 +207,15 @@ http:
       service: cockpit
       entryPoints:
         - websecure
+    apache:
+      rule: Host(`apache.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: apache.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
     dashboard:
       rule: Host(`traefik.felixs-sdi1.alphahorizon.io`)
       tls:
@@ -231,6 +240,10 @@ http:
         serversTransport: cockpit
         servers:
           - url: https://localhost:9090
+    apache:
+      loadBalancer:
+        servers:
+          - url: http://localhost:8080
 
   serversTransports:
     cockpit:
@@ -620,4 +633,33 @@ givenName: Oswald
 mail: tibbie@ldap.felixs-sdi1.alphahorizon.io
 userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
 EOT
+```
+
+## Apache
+
+```shell
+sudo apt update
+sudo apt install -y apache2
+sudo vi /etc/apache2/apache2.conf # Now replace/add the following:
+Listen 8080
+sudo systemctl restart apache2
+sudo systemctl enable --now apache2
+sudo systemctl status apache2
+
+sudo tree -T "Example Index" -H '.' -o /var/www/html/index.html /var/www/html # Replace the default file with a file listing
+sudo apt install -y apache2-doc # Install the docs package
+curl https://apache.felixs-sdi1.alphahorizon.io/manual/en/index.html # Access the installed docs
+
+sudo mkdir -p /var/www/sdidoc
+sudo tree -T "Example Index For sdidoc" -H '.' -o /var/www/sdidoc/index.html /var/www/html
+
+sudo vi /etc/apache2/mods-enabled/alias.conf # Now replace/add the following:
+Alias /sdidoc /var/www/sdidoc
+
+<Directory "/var/www/sdidoc">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+</Directory>
+sudo systemctl reload apache2
 ```
