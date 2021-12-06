@@ -208,11 +208,13 @@ http:
       entryPoints:
         - websecure
     apache:
-      rule: Host(`apache.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`apache.felixs-sdi1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.felixs-sdi1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
           - main: apache.felixs-sdi1.alphahorizon.io
+          - main: marx.apache.felixs-sdi1.alphahorizon.io
+          - main: kropotkin.apache.felixs-sdi1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
@@ -249,7 +251,7 @@ http:
     cockpit:
       insecureSkipVerify: true
 EOT
-$ sudo docker run -d --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik:v2.5
+$ sudo docker run -d --restart=always --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik:v2.5
 $ sudo ufw allow 'DNS'
 $ sudo ufw allow 'WWW'
 $ sudo ufw allow 'WWW Secure' # Now visit https://cockpit.felixs-sdi1.alphahorizon.io/
@@ -640,13 +642,37 @@ EOT
 ```shell
 sudo apt update
 sudo apt install -y apache2
-sudo vi /etc/apache2/apache2.conf # Now replace/add the following:
+sudo vi /etc/apache2/ports.conf # Now replace/add the following:
 Listen 8080
 sudo systemctl restart apache2
 sudo systemctl enable --now apache2
 sudo systemctl status apache2
 
 sudo tree -T "Example Index" -H '.' -o /var/www/html/index.html /var/www/html # Replace the default file with a file listing
+sudo tee /etc/apache2/sites-available/apache.felixs-sdi1.alphahorizon.io.conf <<'EOT'
+<VirtualHost *:8080>
+        ServerName felixs-sdi1.alphahorizon.io
+        ServerAlias apache.felixs-sdi1.alphahorizon.io
+
+        ServerAdmin webmaster@alphahorizon.io
+        DocumentRoot /var/www/html
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        <Directory "/var/www/html">
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+</VirtualHost>
+EOT
+sudo a2dissite 000-default.conf
+sudo a2ensite apache.felixs-sdi1.alphahorizon.io
+sudo systemctl reload apache2
+
+curl https://apache.felixs-sdi1.alphahorizon.io/ # Access the index
+
 sudo apt install -y apache2-doc # Install the docs package
 curl https://apache.felixs-sdi1.alphahorizon.io/manual/en/index.html # Access the installed docs
 
@@ -662,4 +688,56 @@ Alias /sdidoc /var/www/sdidoc
         Require all granted
 </Directory>
 sudo systemctl reload apache2
+
+curl https://apache.felixs-sdi1.alphahorizon.io/sdidoc/ # Access the index
+
+sudo mkdir -p /var/www/marx.apache.felixs-sdi1.alphahorizon.io
+echo '<h1>Marx</h1>' | sudo tee /var/www/marx.apache.felixs-sdi1.alphahorizon.io/index.html
+sudo tee /etc/apache2/sites-available/marx.apache.felixs-sdi1.alphahorizon.io.conf <<'EOT'
+<VirtualHost *:8080>
+        ServerName felixs-sdi1.alphahorizon.io
+        ServerAlias marx.apache.felixs-sdi1.alphahorizon.io
+
+        ServerAdmin webmaster@alphahorizon.io
+        DocumentRoot /var/www/marx.apache.felixs-sdi1.alphahorizon.io
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        <Directory "/var/www/marx.apache.felixs-sdi1.alphahorizon.io">
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+</VirtualHost>
+EOT
+sudo a2ensite marx.apache.felixs-sdi1.alphahorizon.io
+sudo systemctl reload apache2
+
+curl https://marx.apache.felixs-sdi1.alphahorizon.io/ # Access the Marx site
+
+sudo mkdir -p /var/www/kropotkin.apache.felixs-sdi1.alphahorizon.io
+echo '<h1>Kropotkin</h1>' | sudo tee /var/www/kropotkin.apache.felixs-sdi1.alphahorizon.io/index.html
+sudo tee /etc/apache2/sites-available/kropotkin.apache.felixs-sdi1.alphahorizon.io.conf <<'EOT'
+<VirtualHost *:8080>
+        ServerName felixs-sdi1.alphahorizon.io
+        ServerAlias kropotkin.apache.felixs-sdi1.alphahorizon.io
+
+        ServerAdmin webmaster@alphahorizon.io
+        DocumentRoot /var/www/kropotkin.apache.felixs-sdi1.alphahorizon.io
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        <Directory "/var/www/kropotkin.apache.felixs-sdi1.alphahorizon.io">
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+</VirtualHost>
+EOT
+sudo a2ensite kropotkin.apache.felixs-sdi1.alphahorizon.io
+sudo systemctl reload apache2
+
+curl https://kropotkin.apache.felixs-sdi1.alphahorizon.io/ # Access the Kropotkin site
 ```
