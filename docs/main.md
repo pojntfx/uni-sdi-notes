@@ -653,6 +653,8 @@ sudo systemctl enable --now apache2
 sudo systemctl status apache2
 
 sudo tree -T "Example Index" -H '.' -o /var/www/html/index.html /var/www/html # Replace the default file with a file listing
+sudo mkdir -p /var/www/sdidoc
+sudo tree -T "Example Index For sdidoc" -H '.' -o /var/www/sdidoc/index.html /var/www/html # Create a secondary listing for the alias
 sudo tee /etc/apache2/sites-available/apache.felixs-sdi1.alphahorizon.io.conf <<'EOT'
 <VirtualHost *:8080>
         ServerName felixs-sdi1.alphahorizon.io
@@ -669,6 +671,14 @@ sudo tee /etc/apache2/sites-available/apache.felixs-sdi1.alphahorizon.io.conf <<
                 AllowOverride None
                 Require all granted
         </Directory>
+
+        Alias /sdidoc /var/www/sdidoc
+
+        <Directory "/var/www/sdidoc">
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
 </VirtualHost>
 EOT
 sudo a2dissite 000-default.conf
@@ -676,24 +686,10 @@ sudo a2ensite apache.felixs-sdi1.alphahorizon.io
 sudo systemctl reload apache2
 
 curl https://apache.felixs-sdi1.alphahorizon.io/ # Access the index
+curl https://apache.felixs-sdi1.alphahorizon.io/sdidoc/ # Access the index in `/var/www/sdidoc`
 
 sudo apt install -y apache2-doc # Install the docs package
-curl https://apache.felixs-sdi1.alphahorizon.io/manual/en/index.html # Access the installed docs
-
-sudo mkdir -p /var/www/sdidoc
-sudo tree -T "Example Index For sdidoc" -H '.' -o /var/www/sdidoc/index.html /var/www/html
-
-sudo vi /etc/apache2/mods-enabled/alias.conf # Now replace/add the following:
-Alias /sdidoc /var/www/sdidoc
-
-<Directory "/var/www/sdidoc">
-        Options Indexes FollowSymLinks
-        AllowOverride None
-        Require all granted
-</Directory>
-sudo systemctl reload apache2
-
-curl https://apache.felixs-sdi1.alphahorizon.io/sdidoc/ # Access the index
+curl https://apache.felixs-sdi1.alphahorizon.io/manual/en/index.html # Access the installed docs; be careful, this applies to all virtual hosts
 
 sudo mkdir -p /var/www/marx.apache.felixs-sdi1.alphahorizon.io
 echo '<h1>Marx</h1>' | sudo tee /var/www/marx.apache.felixs-sdi1.alphahorizon.io/index.html
