@@ -237,6 +237,15 @@ http:
       service: apache
       entryPoints:
         - websecure
+    nextcloud:
+      rule: Host(`nextcloud.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: nextcloud.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
     dashboard:
       rule: Host(`traefik.felixs-sdi1.alphahorizon.io`)
       tls:
@@ -923,4 +932,61 @@ sudo systemctl reload apache2
 # - Delete "groups" under "Account types"
 
 # Now visit https://ldap-account-manager.felixs-sdi1.alphahorizon.io/templates/login.php and login with your the LDAP admin account password
+```
+
+## Nextcloud
+
+```shell
+sudo apt update
+sudo apt install -y libapache2-mod-php php-ctype php-curl php-dom php-gd php-iconv php-json php-xml php-mbstring php-posix php-simplexml php-xmlreader php-xmlwriter php-zip php-mysql php-fileinfo php-bz2 php-intl php-ldap php-ftp php-imap php-bcmath php-gmp php-exif php-apcu php-imagick php-phar ffmpeg libreoffice curl unzip
+
+sudo mysql -u root -e "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'mypasswd';"
+sudo mysql -u root -e "CREATE DATABASE nextcloud;"
+sudo mysql -u root -e "GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';"
+sudo mysql -u root -e "FLUSH PRIVILEGES;"
+
+sudo tee /etc/php/*/apache2/php.ini <<'EOT'
+date.timezone = Europe/Berlin
+memory_limit = 1024M
+upload_max_filesize = 1024M
+post_max_size = 1024M
+max_execution_time = 300
+EOT
+
+curl -Lo /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-23.0.0.zip
+unzip /tmp/nextcloud.zip 'nextcloud/*' -d /tmp/nextcloud
+sudo mv /tmp/nextcloud/nextcloud/ /var/www/nextcloud.felixs-sdi1.alphahorizon.io/
+sudo chown -R www-data:www-data /var/www/nextcloud.felixs-sdi1.alphahorizon.io/
+sudo chmod -R 755 /var/www/nextcloud.felixs-sdi1.alphahorizon.io/
+
+sudo tee /etc/apache2/sites-available/nextcloud.felixs-sdi1.alphahorizon.io.conf <<'EOT'
+<VirtualHost *:8080>
+        ServerName felixs-sdi1.alphahorizon.io
+        ServerAlias nextcloud.felixs-sdi1.alphahorizon.io
+
+        ServerAdmin webmaster@alphahorizon.io
+        DocumentRoot /var/www/nextcloud.felixs-sdi1.alphahorizon.io
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        <Directory "/var/www/nextcloud.felixs-sdi1.alphahorizon.io">
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+</VirtualHost>
+EOT
+sudo a2ensite nextcloud.felixs-sdi1.alphahorizon.io
+sudo systemctl reload apache2
+
+curl https://nextcloud.felixs-sdi1.alphahorizon.io/ # Access the Nextcloud installer
+
+# Now visit https://nextcloud.felixs-sdi1.alphahorizon.io/index.php and create an admin account
+# - Set `nextcloud` as the database user
+# - Set `mypasswd` as the database password
+# - Set `nextcloud` as the database name
+# - Set `localhost:3306` as the database host
+# - Click on "finish setup"
+# Now visit https://nextcloud.felixs-sdi1.alphahorizon.io/index.php/settings/admin/richdocuments and select `Use the built-in CODE - Collabora Online Development Edition`
 ```
