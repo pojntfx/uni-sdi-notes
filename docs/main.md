@@ -988,5 +988,16 @@ curl https://nextcloud.felicitass-sdi1.alphahorizon.io/ # Access the Nextcloud i
 # - Set `nextcloud` as the database name
 # - Set `localhost:3306` as the database host
 # - Click on "finish setup"
-# Now visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/settings/admin/richdocuments and select `Use the built-in CODE - Collabora Online Development Edition`
+# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/settings/admin/richdocuments and select `Use the built-in CODE - Collabora Online Development Edition`
+# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/settings/apps/installed/user_ldap and click `Enable`
+# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/settings/admin/ldap and enter the following:
+# - Set `localhost` as the host
+# - Set `389` as the port
+# - Set `cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io` as the user DN
+# - Set the password from `sudo dpkg-reconfigure slapd` as the password
+# - Set `dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io` as the base DN
+# Click "continue" and "continue"
+# - Set `organizationUnit` under `Only these object classes:` in the groups settings
+# - Click `Verify settings and count the groups`
+# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/login and login as bean using password "password"
 ```
