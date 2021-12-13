@@ -996,8 +996,8 @@ curl https://nextcloud.felicitass-sdi1.alphahorizon.io/ # Access the Nextcloud i
 # - Set `cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io` as the user DN
 # - Set the password from `sudo dpkg-reconfigure slapd` as the password
 # - Set `dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io` as the base DN
-# Click "continue" and "continue"
+# Click verify, "continue", verify and "continue"
 # - Set `organizationUnit` under `Only these object classes:` in the groups settings
 # - Click `Verify settings and count the groups`
-# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/login and login as bean using password "password"
+# - Visit https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/login and login as bean using password "password" (if you can't login, go back to https://nextcloud.felicitass-sdi1.alphahorizon.io/index.php/settings/admin/ldap and verify everything again)
 ```
