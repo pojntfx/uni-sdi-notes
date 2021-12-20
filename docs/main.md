@@ -278,7 +278,7 @@ http:
       loadBalancer:
         serversTransport: cockpit
         servers:
-          - url: https://localhost:9090
+          - url: https://localhost:9091
     apache:
       loadBalancer:
         servers:
@@ -308,6 +308,9 @@ $ ssh -o ProxyCommand="openssl s_client -connect ssh.felicitass-sdi1.alphahorizo
 echo 'deb http://deb.debian.org/debian bullseye-backports main' | sudo tee /etc/apt/sources.list.d/backports.list
 sudo apt update
 sudo apt install -t bullseye-backports -y cockpit
+
+sudo sed -i /lib/systemd/system/cockpit.socket -e 's/ListenStream=9090/ListenStream=9091/g'
+sudo systemctl daemon-reload
 ```
 
 ## DNS
