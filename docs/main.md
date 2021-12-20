@@ -1113,4 +1113,8 @@ org_role = "Admin"
 EOT
 
 # Visit https://grafana.felixs-sdi1.alphahorizon.io/?orgId=1 and login as `operator` using the password from above; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
+
+# Now add a datasource, select Prometheus and use `http://localhost:9090` as the URL
+
+# Now go to create, import and select `1860` as the ID (https://grafana.com/grafana/dashboards/1860)
 ```
