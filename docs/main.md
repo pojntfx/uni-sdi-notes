@@ -120,6 +120,9 @@ entryPoints:
   websecurealt:
     address: ":8443"
 
+  metrics:
+    address: "localhost:8082"
+
 providers:
   file:
     filename: /etc/traefik/services.yaml
@@ -138,6 +141,10 @@ certificatesResolvers:
 
 log:
   level: INFO
+
+metrics:
+  prometheus:
+    entryPoint: metrics
 EOT
 $ sudo tee /etc/traefik/services.yaml<<'EOT'
 udp:
@@ -1046,6 +1053,38 @@ sudo apt update
 sudo apt install -y prometheus
 
 sudo systemctl enable --now prometheus
+
+sudo tee /etc/prometheus/prometheus.yml <<'EOT'
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  external_labels:
+      monitor: 'example'
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: ['localhost:9093']
+
+rule_files:
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: node
+    static_configs:
+      - targets: ['localhost:9100']
+
+  - job_name: traefik
+    static_configs:
+      - targets: ['localhost:8082']
+EOT
+
+sudo systemctl reload prometheus
 ```
 
 ## Grafana
@@ -1120,6 +1159,8 @@ group_dn = "*"
 org_role = "Admin"
 EOT
 
+sudo systemctl restart grafana-server
+
 # Visit https://grafana.felicitass-sdi1.alphahorizon.io/?orgId=1 and login as `operator` using the password from above; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
 
 # Now add a datasource, select Prometheus and use `http://localhost:9090` as the URL
@@ -1129,4 +1170,6 @@ EOT
 # Now go to Alerting, create alert with name `HostDiskWillFillIn24Hours` and type `Grafana managed alert` using the following query: `(node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0`, `Filesystem is predicted to run out of space within the next 24 hours at current write rate\n VALUE = {{ $value }}\n LABELS: {{ $labels }}` as description, `Host disk will fill in 24 hours (instance {{ $labels.instance }})` as the summary and `serverity=warning` as the labels.
 
 # Now go to https://grafana.felicitass-sdi1.alphahorizon.io/alerting/notifications/receivers/grafana-default-email/edit?alertmanager=grafana, enter your Email, and click on "Test". Now check your inbox, a test mail should have arrived.
+
+# Now go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
 ```
