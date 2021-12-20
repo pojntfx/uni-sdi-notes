@@ -246,6 +246,15 @@ http:
       service: apache
       entryPoints:
         - websecure
+    grafana:
+      rule: Host(`grafana.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: grafana.felixs-sdi1.alphahorizon.io
+      service: grafana
+      entryPoints:
+        - websecure
     dashboard:
       rule: Host(`traefik.felixs-sdi1.alphahorizon.io`)
       tls:
@@ -274,6 +283,10 @@ http:
       loadBalancer:
         servers:
           - url: http://localhost:8080
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://localhost:3000
 
   serversTransports:
     cockpit:
@@ -515,7 +528,7 @@ curl ldap://localhost:8389 # Test the proxy's connection
 ldapwhoami -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -x # Anonymous
 ldapwhoami -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io # As admin
 
-# Now add the objects:
+# Now add the objects (you can create a password hash using `slappasswd | base64`):
 ldapadd -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io <<'EOT'
 version: 1
 
@@ -558,6 +571,11 @@ dn: ou=testing,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon
 objectClass: organizationalUnit
 objectClass: top
 ou: testing
+
+dn: ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: ops
 
 dn: uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
@@ -662,6 +680,22 @@ uidNumber: 1234
 givenName: Oswald
 mail: tibbie@ldap.felixs-sdi1.alphahorizon.io
 userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=operator,ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Operator Operatis
+gidNumber: 100
+homeDirectory: /usr/operator
+sn: Operator
+uid: operatis
+uidNumber: 1235
+givenName: Operator
+mail: operator@ldap.felixs-sdi1.alphahorizon.io
+userPassword:: e1NTSEF9Y1dtYUZ5Zi9HSTNTcFYyaktmYlpieUhEdFh5ek5wVEkK
 EOT
 
 # And test if we can access using a user
@@ -1000,4 +1034,80 @@ curl https://nextcloud.felixs-sdi1.alphahorizon.io/ # Access the Nextcloud insta
 # - Set `organizationUnit` under `Only these object classes:` in the groups settings
 # - Click `Verify settings and count the groups`
 # - Visit https://nextcloud.felixs-sdi1.alphahorizon.io/index.php/login and login as bean using password "password" (if you can't login, go back to https://nextcloud.felixs-sdi1.alphahorizon.io/index.php/settings/admin/ldap and verify everything again)
+```
+
+## Prometheus
+
+```shell
+sudo apt update
+sudo apt install -y prometheus
+
+sudo systemctl enable --now prometheus
+```
+
+## Grafana
+
+```shell
+sudo apt update
+sudo apt install -y apt-transport-https software-properties-common
+
+curl -L https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo 'deb https://packages.grafana.com/oss/deb stable main' | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+sudo apt update
+sudo apt install -y grafana
+
+sudo systemctl enable --now grafana-server
+
+sudo vi /etc/grafana/grafana.ini
+# Replace the `[auth.ldap]` block with the following:
+[auth.ldap]
+enabled = true
+config_file = /etc/grafana/ldap.toml
+allow_sign_up = true
+# Replace the `[log]` block with the following:
+[log]
+filters = ldap:debug
+
+
+sudo tee /etc/grafana/ldap.toml <<'EOT'
+[[servers]]
+host = "127.0.0.1"
+port = 389
+use_ssl = false
+start_tls = false
+ssl_skip_verify = false
+
+bind_dn = "cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
+bind_password = 'LDAPPass22$$44'
+search_filter = "(uid=%s)"
+#search_base_dns = ["dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"] # If we were to use groups
+search_base_dns = ["ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"]
+
+[servers.attributes]
+name = "givenName"
+surname = "sn"
+username = "cn"
+member_of = "memberOf"
+email =  "email"
+
+# Would be useful if we were to use groups
+#[[servers.group_mappings]]
+#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
+#org_role = "Admin"
+#
+#[[servers.group_mappings]]
+#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
+#org_role = "Editor"
+#
+#[[servers.group_mappings]]
+#group_dn = "*"
+#org_role = "Viewer"
+
+[[servers.group_mappings]]
+group_dn = "*"
+org_role = "Admin"
+EOT
+
+# Visit https://grafana.felixs-sdi1.alphahorizon.io/?orgId=1 and login as `operator` using the password from above; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
 ```
