@@ -15,7 +15,7 @@ jobs:
             os: alpine:edge
             flags: ""
             cmd: echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && apk add mdbook make && make -j "$(nproc)"
-            dst: out/.
+            dst: out/*
 
     steps:
       - name: Checkout
