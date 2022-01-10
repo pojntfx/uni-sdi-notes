@@ -27,7 +27,7 @@ jobs:
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: marvinpinto/action-automatic-releases@latest
       with:
-        repo_token: "${{ inputs.github_token }}"
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: latest
         prerelease: false
         files: |
@@ -41,7 +41,7 @@ jobs:
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: JamesIves/github-pages-deploy-action@4.1.0
       with:
-        token: "${{ inputs.github_token }}"
+        token: "${{ secrets.GITHUB_TOKEN }}"
         branch: gh-pages
         folder: /tmp/gh-pages
         git-config-name: GitHub Pages Bot
