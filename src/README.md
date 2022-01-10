@@ -17,5 +17,3 @@ If you like the study materials, a GitHub star is always appreciated :)
 Uni Software Defined Infrastructure Notes (c) 2022 Felicitas Pojtinger and contributors
 
 SPDX-License-Identifier: AGPL-3.0
-
-\newpage
