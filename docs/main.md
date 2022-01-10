@@ -1,8 +1,11 @@
-% Uni Software Defined Infrastructure Notes
-% Felix Pojtinger
-% \today
-\tableofcontents
-\newpage
+---
+author: [Jakob Waibel, Felix Pojtinger]
+date: "2022-01-10"
+subject: "Uni Software Defined Infrastructure Notes"
+keywords: [devops, sysadmin, sdi, hdm-stuttgart]
+subtitle: "Notes for the software defined infrastructure course at HdM Stuttgart"
+lang: "en"
+---
 
 # Uni Software Defined Infrastructure Notes
 
@@ -25,6 +28,7 @@ If you like the study materials, a GitHub star is always appreciated :)
 Uni Software Defined Infrastructure Notes (c) 2021 Felix Pojtinger and contributors
 
 SPDX-License-Identifier: AGPL-3.0
+
 \newpage
 
 ## Hosts
