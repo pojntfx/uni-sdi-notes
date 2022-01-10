@@ -1,0 +1,10 @@
+[book]
+authors = ["Felix Pojtinger", "Jakob Waibel"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Uni Software Defined Infrastructure Notes"
+description = "Notes for the software defined infrastructure course at HdM Stuttgart."
+
+[build]
+build-dir = "out"
