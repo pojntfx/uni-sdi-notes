@@ -1,4 +1,15 @@
-# IPv6
+# Network
+
+## DNS Entries
+
+```dns
+jeans-box     10800   IN      AAAA    2001:7c7:2121:8d00::3
+*.jeans-box   10800   IN      AAAA    2001:7c7:2121:8d00::3
+jeans-box     10800   IN      A       138.68.70.72
+*.jeans-box   10800   IN      A       138.68.70.72
+```
+
+## Box
 
 ```shell
 ssh root@jeans-box
