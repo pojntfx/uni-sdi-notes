@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded "><a href="debian.html"><strong aria-hidden="true">1.</strong> Debian</a></li><li class="chapter-item expanded "><a href="network.html"><strong aria-hidden="true">2.</strong> Network</a></li><li class="chapter-item expanded "><a href="ssh.html" class="active"><strong aria-hidden="true">3.</strong> SSH</a></li><li class="chapter-item expanded "><a href="firewalld.html"><strong aria-hidden="true">4.</strong> firewalld</a></li><li class="chapter-item expanded "><a href="apt.html"><strong aria-hidden="true">5.</strong> APT</a></li><li class="chapter-item expanded "><a href="podman.html"><strong aria-hidden="true">6.</strong> Podman</a></li><li class="chapter-item expanded "><a href="traefik.html"><strong aria-hidden="true">7.</strong> Traefik</a></li><li class="chapter-item expanded "><a href="cockpit.html"><strong aria-hidden="true">8.</strong> Cockpit</a></li><li class="chapter-item expanded "><a href="dns.html"><strong aria-hidden="true">9.</strong> DNS</a></li><li class="chapter-item expanded "><a href="ldap.html"><strong aria-hidden="true">10.</strong> LDAP</a></li><li class="chapter-item expanded "><a href="apache.html"><strong aria-hidden="true">11.</strong> Apache</a></li><li class="chapter-item expanded "><a href="mariadb.html"><strong aria-hidden="true">12.</strong> MariaDB</a></li><li class="chapter-item expanded "><a href="lam.html"><strong aria-hidden="true">13.</strong> LAM</a></li><li class="chapter-item expanded "><a href="nextcloud.html"><strong aria-hidden="true">14.</strong> Nextcloud</a></li><li class="chapter-item expanded "><a href="prometheus.html"><strong aria-hidden="true">15.</strong> Prometheus</a></li><li class="chapter-item expanded "><a href="grafana.html"><strong aria-hidden="true">16.</strong> Grafana</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Base System</li><li class="chapter-item expanded "><a href="debian.html"><strong aria-hidden="true">1.</strong> Debian</a></li><li class="chapter-item expanded "><a href="network.html"><strong aria-hidden="true">2.</strong> Network</a></li><li class="chapter-item expanded "><a href="user.html"><strong aria-hidden="true">3.</strong> User</a></li><li class="chapter-item expanded "><a href="ssh.html" class="active"><strong aria-hidden="true">4.</strong> SSH</a></li><li class="chapter-item expanded "><a href="firewalld.html"><strong aria-hidden="true">5.</strong> firewalld</a></li><li class="chapter-item expanded "><a href="apt.html"><strong aria-hidden="true">6.</strong> APT</a></li><li class="chapter-item expanded "><a href="podman.html"><strong aria-hidden="true">7.</strong> Podman</a></li><li class="chapter-item expanded "><a href="traefik.html"><strong aria-hidden="true">8.</strong> Traefik</a></li><li class="chapter-item expanded "><a href="cockpit.html"><strong aria-hidden="true">9.</strong> Cockpit</a></li><li class="chapter-item expanded affix "><li class="part-title">Cloud-Native Services</li><li class="chapter-item expanded "><a href="gitea.html"><strong aria-hidden="true">10.</strong> Gitea</a></li><li class="chapter-item expanded "><a href="dex.html"><strong aria-hidden="true">11.</strong> Dex</a></li><li class="chapter-item expanded "><a href="liwasc.html"><strong aria-hidden="true">12.</strong> liwasc</a></li><li class="chapter-item expanded "><a href="bofied.html"><strong aria-hidden="true">13.</strong> bofied</a></li><li class="chapter-item expanded affix "><li class="part-title">Traditional Services</li><li class="chapter-item expanded "><a href="dns.html"><strong aria-hidden="true">14.</strong> DNS</a></li><li class="chapter-item expanded "><a href="ldap.html"><strong aria-hidden="true">15.</strong> LDAP</a></li><li class="chapter-item expanded "><a href="apache.html"><strong aria-hidden="true">16.</strong> Apache</a></li><li class="chapter-item expanded "><a href="mariadb.html"><strong aria-hidden="true">17.</strong> MariaDB</a></li><li class="chapter-item expanded "><a href="lam.html"><strong aria-hidden="true">18.</strong> LAM</a></li><li class="chapter-item expanded "><a href="nextcloud.html"><strong aria-hidden="true">19.</strong> Nextcloud</a></li><li class="chapter-item expanded "><a href="prometheus.html"><strong aria-hidden="true">20.</strong> Prometheus</a></li><li class="chapter-item expanded "><a href="grafana.html"><strong aria-hidden="true">21.</strong> Grafana</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -140,15 +140,6 @@ apt update
 apt install -y sudo curl openssh-server locales
 systemctl enable --now ssh
 
-echo &quot;LC_ALL=en_US.UTF-8&quot; | tee -a /etc/environment
-echo &quot;en_US.UTF-8 UTF-8&quot; | tee /etc/locale.gen
-echo &quot;LANG=en_US.UTF-8&quot; | tee /etc/locale.conf
-locale-gen en_US.UTF-8
-
-adduser jean
-su jean -c &quot;mkdir -m 700 -p ~/.ssh &amp;&amp; curl 'https://github.com/jean.keys' | tee -a ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&quot;
-usermod -aG sudo jean
-
 echo 'PermitRootLogin no' | tee /etc/ssh/ssh_config.d/no-root.conf
 
 passwd -d root
@@ -163,7 +154,7 @@ systemctl restart ssh
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="network.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="user.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                             <a rel="next" href="firewalld.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
@@ -175,7 +166,7 @@ systemctl restart ssh
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="network.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="user.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                     <a rel="next" href="firewalld.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
