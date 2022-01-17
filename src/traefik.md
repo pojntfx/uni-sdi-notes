@@ -4,6 +4,9 @@
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml<<'EOT'
 entryPoints:
+  dnsTcp:
+    address: ":53"
+
   web:
     address: ":80"
 
@@ -15,6 +18,9 @@ entryPoints:
 
   websecurealt:
     address: ":8443"
+
+  metrics:
+    address: "localhost:8082"
 
 providers:
   file:
@@ -34,11 +40,32 @@ certificatesResolvers:
 
 log:
   level: INFO
+
+metrics:
+  prometheus:
+    entryPoint: metrics
 EOT
 
 sudo tee /etc/traefik/services.yaml<<'EOT'
+udp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsUdp
+      service: dns
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+
 tcp:
   routers:
+    dns:
+      entryPoints:
+        - dnsTcp
+      rule: HostSNI(`*`)
+      service: dns
     ssh:
       entryPoints:
         - websecurealt
@@ -58,7 +85,20 @@ tcp:
         certResolver: letsencrypt
         domains:
           - main: ssh.jeans-box.example.com
+    ldap:
+      entryPoints:
+        - websecure
+      rule: HostSNI(`ldap.felixs-sdi1.alphahorizon.io`)
+      service: ldap
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ldap.felixs-sdi1.alphahorizon.io
   services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
     ssh:
       loadBalancer:
         servers:
@@ -67,6 +107,10 @@ tcp:
       loadBalancer:
         servers:
           - address: localhost:3022
+    ldap:
+      loadBalancer:
+        servers:
+          - address: localhost:389
 
 http:
   routers:
@@ -126,6 +170,54 @@ http:
       service: bofied
       entryPoints:
         - websecure
+    apache:
+      rule: Host(`apache.felixs-sdi1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: apache.felixs-sdi1.alphahorizon.io
+          - main: marx.apache.felixs-sdi1.alphahorizon.io
+          - main: kropotkin.apache.felixs-sdi1.alphahorizon.io
+          - main: secure.apache.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
+    phpmyadmin:
+      rule: Host(`phpmyadmin.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: phpmyadmin.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
+    ldapAccountManager:
+      rule: Host(`ldap-account-manager.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ldap-account-manager.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
+    nextcloud:
+      rule: Host(`nextcloud.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: nextcloud.felixs-sdi1.alphahorizon.io
+      service: apache
+      entryPoints:
+        - websecure
+    grafana:
+      rule: Host(`grafana.felixs-sdi1.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: grafana.felixs-sdi1.alphahorizon.io
+      service: grafana
+      entryPoints:
+        - websecure
 
   middlewares:
     dashboard:
@@ -155,6 +247,14 @@ http:
       loadBalancer:
         servers:
           - url: http://localhost:15256
+    apache:
+      loadBalancer:
+        servers:
+          - url: http://localhost:8080
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://localhost:3000
 
   serversTransports:
     cockpit:
@@ -166,6 +266,7 @@ sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefi
 sudo systemctl daemon-reload
 sudo systemctl enable --now traefik
 
+sudo firewall-cmd --permanent --add-service=dns
 sudo firewall-cmd --permanent --add-service=http
 sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --permanent --add-port=8443/tcp
