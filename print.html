@@ -146,6 +146,9 @@
 <p>Uni Software Defined Infrastructure Notes (c) 2022 Felix Pojtinger and contributors</p>
 <p>SPDX-License-Identifier: AGPL-3.0</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="debian"><a class="header" href="#debian">Debian</a></h1>
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
 <pre><code class="language-shell">sudo umount /dev/mmcblk0{,p1,p0}
 curl -L 'https://raspi.debian.net/tested/20210823_raspi_3_bullseye.img.xz' | xzcat &gt;/tmp/debian.img
 sudo dd if=/tmp/debian.img of=/dev/mmcblk0 bs=4M status=progress
@@ -156,19 +159,16 @@ sudo mount /dev/mmcblk0p1 /mnt/raspi-boot
 {
     echo &quot;root_pw=$(openssl rand -base64 12)&quot;
     echo &quot;root_authorized_key=$(cat ~/.ssh/id_rsa.pub)&quot;
-    echo &quot;hostname=jeans-box&quot;
+    echo &quot;hostname=sdi-1&quot;
 } &gt;&gt;/mnt/raspi-boot/sysconf.txt
 sudo umount /dev/mmcblk0{,p1,p0}
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="network"><a class="header" href="#network">Network</a></h1>
-<h2 id="dns-entries"><a class="header" href="#dns-entries">DNS Entries</a></h2>
-<pre><code class="language-dns">jeans-box     10800   IN      AAAA    2001:7c7:2121:8d00::3
-*.jeans-box   10800   IN      AAAA    2001:7c7:2121:8d00::3
-jeans-box     10800   IN      A       138.68.70.72
-*.jeans-box   10800   IN      A       138.68.70.72
-</code></pre>
 <h2 id="box"><a class="header" href="#box">Box</a></h2>
-<pre><code class="language-shell">ssh root@jeans-box
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh root@sdi-1
 tee /etc/sysctl.d/privacy.conf &lt;&lt;'EOT'
 net.ipv6.conf.all.use_tempaddr=2
 EOT
@@ -179,7 +179,7 @@ auto eth0
 iface eth0 inet dhcp
 
 iface eth0 inet6 static
-    address 2001:7c7:2121:8d00::3
+    address 2604:a880:cad:d0::d40:1001
     autoconf 1
     accept_ra 2
 EOT
@@ -190,10 +190,23 @@ nameserver 2606:4700:4700::1111
 nameserver 2606:4700:4700::1001
 EOT
 chattr +i /etc/resolv.conf
-sed -i /etc/hosts -e 's/\tlocalhost/\tlocalhost jeans-box/g'
+sed -i /etc/hosts -e 's/\tlocalhost/\tlocalhost sdi-1/g'
+</code></pre>
+<h2 id="dns-entries"><a class="header" href="#dns-entries">DNS Entries</a></h2>
+<pre><code class="language-dns">sdi-1     10800   IN      AAAA    2604:a880:cad:d0::d40:1001
+*.sdi-1   10800   IN      AAAA    2604:a880:cad:d0::d40:1001
+sdi-1     10800   IN      A       143.198.37.173
+*.sdi-1   10800   IN      A       143.198.37.173
+sdi-2     10800   IN      AAAA    2400:6180:0:d0::1020:c001
+*.sdi-2   10800   IN      AAAA    2400:6180:0:d0::1020:c001
+sdi-2     10800   IN      A       128.199.92.39
+*.sdi-2   10800   IN      A       128.199.92.39
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="user"><a class="header" href="#user">User</a></h1>
-<pre><code class="language-shell">ssh root@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh root@sdi-1.alphahorizon.io
 echo &quot;LC_ALL=en_US.UTF-8&quot; | tee -a /etc/environment
 echo &quot;en_US.UTF-8 UTF-8&quot; | tee /etc/locale.gen
 echo &quot;LANG=en_US.UTF-8&quot; | tee /etc/locale.conf
@@ -204,7 +217,10 @@ su jean -c &quot;mkdir -m 700 -p ~/.ssh &amp;&amp; curl 'https://github.com/jean
 usermod -aG sudo jean
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ssh"><a class="header" href="#ssh">SSH</a></h1>
-<pre><code class="language-shell">ssh root@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh root@sdi-1.alphahorizon.io
 apt update
 apt install -y sudo curl openssh-server locales
 systemctl enable --now ssh
@@ -219,7 +235,10 @@ rm ~/.ssh/authorized_keys
 systemctl restart ssh
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="firewalld"><a class="header" href="#firewalld">firewalld</a></h1>
-<pre><code class="language-shell">ssh jean@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 sudo apt update
 sudo apt install -y firewalld
 sudo systemctl enable --now firewalld
@@ -229,7 +248,10 @@ sudo firewall-cmd --permanent --add-service=llmnr
 sudo firewall-cmd --reload
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="apt"><a class="header" href="#apt">APT</a></h1>
-<pre><code class="language-shell">ssh jean@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 sudo apt update
 sudo apt install -y unattended-upgrades
 
@@ -244,7 +266,10 @@ sudo systemctl enable --now unattended-upgrades
 sudo unattended-upgrades --debug
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="podman"><a class="header" href="#podman">Podman</a></h1>
-<pre><code class="language-shell">ssh jean@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/libcontainers.list
 curl -L &quot;https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/Release.key&quot; | sudo apt-key add -
 sudo apt update
@@ -257,7 +282,11 @@ sudo systemctl enable --now podman-auto-update.timer
 sudo systemctl enable --now podman-restart
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="traefik"><a class="header" href="#traefik">Traefik</a></h1>
-<pre><code class="language-shell">sudo mkdir -p /etc/traefik
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml&lt;&lt;'EOT'
 entryPoints:
   dnsTcp:
@@ -335,21 +364,21 @@ tcp:
     sshOverTLS:
       entryPoints:
         - websecure
-      rule: HostSNI(`ssh.jeans-box.example.com`)
+      rule: HostSNI(`ssh.sdi-1.alphahorizon.io`)
       service: ssh
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ssh.jeans-box.example.com
+          - main: ssh.sdi-1.alphahorizon.io
     ldap:
       entryPoints:
         - websecure
-      rule: HostSNI(`ldap.felixs-sdi1.alphahorizon.io`)
+      rule: HostSNI(`ldap.sdi-1.alphahorizon.io`)
       service: ldap
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ldap.felixs-sdi1.alphahorizon.io
+          - main: ldap.sdi-1.alphahorizon.io
   services:
     dns:
       loadBalancer:
@@ -371,106 +400,106 @@ tcp:
 http:
   routers:
     dashboard:
-      rule: Host(`traefik.jeans-box.example.com`)
+      rule: Host(`traefik.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: traefik.jeans-box.example.com
+          - main: traefik.sdi-1.alphahorizon.io
       service: api@internal
       entryPoints:
         - websecure
       middlewares:
         - dashboard
     cockpit:
-      rule: Host(`cockpit.jeans-box.example.com`)
+      rule: Host(`cockpit.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: cockpit.jeans-box.example.com
+          - main: cockpit.sdi-1.alphahorizon.io
       service: cockpit
       entryPoints:
         - websecure
     gitea:
-      rule: Host(`gitea.jeans-box.example.com`)
+      rule: Host(`gitea.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: gitea.jeans-box.example.com
+          - main: gitea.sdi-1.alphahorizon.io
       service: gitea
       entryPoints:
         - websecure
     dex:
-      rule: Host(`dex.jeans-box.example.com`)
+      rule: Host(`dex.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: dex.jeans-box.example.com
+          - main: dex.sdi-1.alphahorizon.io
       service: dex
       entryPoints:
         - websecure
     liwasc:
-      rule: Host(`liwasc.jeans-box.example.com`)
+      rule: Host(`liwasc.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: liwasc.jeans-box.example.com
+          - main: liwasc.sdi-1.alphahorizon.io
       service: liwasc
       entryPoints:
         - websecure
     bofied:
-      rule: Host(`bofied.jeans-box.example.com`)
+      rule: Host(`bofied.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: bofied.jeans-box.example.com
+          - main: bofied.sdi-1.alphahorizon.io
       service: bofied
       entryPoints:
         - websecure
     apache:
-      rule: Host(`apache.felixs-sdi1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`apache.sdi-1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: apache.felixs-sdi1.alphahorizon.io
-          - main: marx.apache.felixs-sdi1.alphahorizon.io
-          - main: kropotkin.apache.felixs-sdi1.alphahorizon.io
-          - main: secure.apache.felixs-sdi1.alphahorizon.io
+          - main: apache.sdi-1.alphahorizon.io
+          - main: marx.apache.sdi-1.alphahorizon.io
+          - main: kropotkin.apache.sdi-1.alphahorizon.io
+          - main: secure.apache.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     phpmyadmin:
-      rule: Host(`phpmyadmin.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`phpmyadmin.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: phpmyadmin.felixs-sdi1.alphahorizon.io
+          - main: phpmyadmin.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     ldapAccountManager:
-      rule: Host(`ldap-account-manager.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`ldap-account-manager.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ldap-account-manager.felixs-sdi1.alphahorizon.io
+          - main: ldap-account-manager.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     nextcloud:
-      rule: Host(`nextcloud.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`nextcloud.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: nextcloud.felixs-sdi1.alphahorizon.io
+          - main: nextcloud.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     grafana:
-      rule: Host(`grafana.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`grafana.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: grafana.felixs-sdi1.alphahorizon.io
+          - main: grafana.sdi-1.alphahorizon.io
       service: grafana
       entryPoints:
         - websecure
@@ -479,7 +508,7 @@ http:
     dashboard:
       basicauth:
         users:
-          - &quot;jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN.&quot; # htpasswd -nb htpasswd -nb jean asdf
+          - &quot;jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN.&quot; # htpasswd -nb jean asdf
 
   services:
     cockpit:
@@ -517,6 +546,7 @@ http:
       insecureSkipVerify: true
 EOT
 
+sudo mkdir -p /var/lib/traefik /etc/traefik
 sudo podman run -d --restart=always --label &quot;io.containers.autoupdate=image&quot; --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
 sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
 sudo systemctl daemon-reload
@@ -528,16 +558,20 @@ sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --permanent --add-port=8443/tcp
 sudo firewall-cmd --reload
 
-curl -Lu jean:asdf https://traefik.jeans-box.example.com/ # Test the Traefik dashboard
-ssh -p 8443 jean@jeans-box.example.com # Test SSH over TCP
-ssh -o ProxyCommand=&quot;openssl s_client -connect ssh.jeans-box.example.com:443 -quiet&quot; jean # Test SSH over TLS
+curl -Lu jean:asdf https://traefik.sdi-1.alphahorizon.io/ # Test the Traefik dashboard
+ssh -p 8443 jean@sdi-1.alphahorizon.io # Test SSH over TCP
+ssh -o ProxyCommand=&quot;openssl s_client -connect ssh.sdi-1.alphahorizon.io:443 -quiet&quot; jean # Test SSH over TLS
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cockpit"><a class="header" href="#cockpit">Cockpit</a></h1>
-<pre><code class="language-shell">echo 'deb http://deb.debian.org/debian bullseye-backports main' | sudo tee /etc/apt/sources.list.d/backports.list
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+echo 'deb http://deb.debian.org/debian bullseye-backports main' | sudo tee /etc/apt/sources.list.d/backports.list
 sudo apt update
 sudo apt install -t bullseye-backports -y cockpit cockpit-podman cockpit-pcp
 
-curl https://cockpit.jeans-box.example.com/ # Test Cockpit
+curl https://cockpit.sdi-1.alphahorizon.io/ # Test Cockpit
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gitea"><a class="header" href="#gitea">Gitea</a></h1>
 <pre><code class="language-shell">sudo mkdir -p /var/lib/gitea

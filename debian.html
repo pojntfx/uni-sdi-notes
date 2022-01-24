@@ -135,6 +135,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="debian"><a class="header" href="#debian">Debian</a></h1>
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
 <pre><code class="language-shell">sudo umount /dev/mmcblk0{,p1,p0}
 curl -L 'https://raspi.debian.net/tested/20210823_raspi_3_bullseye.img.xz' | xzcat &gt;/tmp/debian.img
 sudo dd if=/tmp/debian.img of=/dev/mmcblk0 bs=4M status=progress
@@ -145,7 +148,7 @@ sudo mount /dev/mmcblk0p1 /mnt/raspi-boot
 {
     echo &quot;root_pw=$(openssl rand -base64 12)&quot;
     echo &quot;root_authorized_key=$(cat ~/.ssh/id_rsa.pub)&quot;
-    echo &quot;hostname=jeans-box&quot;
+    echo &quot;hostname=sdi-1&quot;
 } &gt;&gt;/mnt/raspi-boot/sysconf.txt
 sudo umount /dev/mmcblk0{,p1,p0}
 </code></pre>

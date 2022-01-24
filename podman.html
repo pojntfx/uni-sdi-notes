@@ -135,7 +135,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="podman"><a class="header" href="#podman">Podman</a></h1>
-<pre><code class="language-shell">ssh jean@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /' | sudo tee /etc/apt/sources.list.d/libcontainers.list
 curl -L &quot;https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/Release.key&quot; | sudo apt-key add -
 sudo apt update

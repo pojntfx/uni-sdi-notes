@@ -135,7 +135,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="firewalld"><a class="header" href="#firewalld">firewalld</a></h1>
-<pre><code class="language-shell">ssh jean@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 sudo apt update
 sudo apt install -y firewalld
 sudo systemctl enable --now firewalld

@@ -135,7 +135,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="ssh"><a class="header" href="#ssh">SSH</a></h1>
-<pre><code class="language-shell">ssh root@jeans-box.example.com
+<blockquote>
+<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
+</blockquote>
+<pre><code class="language-shell">ssh root@sdi-1.alphahorizon.io
 apt update
 apt install -y sudo curl openssh-server locales
 systemctl enable --now ssh
