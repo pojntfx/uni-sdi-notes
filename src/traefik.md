@@ -1,6 +1,9 @@
 # Traefik
 
+> Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
+
 ```shell
+ssh jean@sdi-1.alphahorizon.io
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml<<'EOT'
 entryPoints:
@@ -79,21 +82,21 @@ tcp:
     sshOverTLS:
       entryPoints:
         - websecure
-      rule: HostSNI(`ssh.jeans-box.example.com`)
+      rule: HostSNI(`ssh.sdi-1.alphahorizon.io`)
       service: ssh
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ssh.jeans-box.example.com
+          - main: ssh.sdi-1.alphahorizon.io
     ldap:
       entryPoints:
         - websecure
-      rule: HostSNI(`ldap.felixs-sdi1.alphahorizon.io`)
+      rule: HostSNI(`ldap.sdi-1.alphahorizon.io`)
       service: ldap
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ldap.felixs-sdi1.alphahorizon.io
+          - main: ldap.sdi-1.alphahorizon.io
   services:
     dns:
       loadBalancer:
@@ -115,106 +118,106 @@ tcp:
 http:
   routers:
     dashboard:
-      rule: Host(`traefik.jeans-box.example.com`)
+      rule: Host(`traefik.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: traefik.jeans-box.example.com
+          - main: traefik.sdi-1.alphahorizon.io
       service: api@internal
       entryPoints:
         - websecure
       middlewares:
         - dashboard
     cockpit:
-      rule: Host(`cockpit.jeans-box.example.com`)
+      rule: Host(`cockpit.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: cockpit.jeans-box.example.com
+          - main: cockpit.sdi-1.alphahorizon.io
       service: cockpit
       entryPoints:
         - websecure
     gitea:
-      rule: Host(`gitea.jeans-box.example.com`)
+      rule: Host(`gitea.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: gitea.jeans-box.example.com
+          - main: gitea.sdi-1.alphahorizon.io
       service: gitea
       entryPoints:
         - websecure
     dex:
-      rule: Host(`dex.jeans-box.example.com`)
+      rule: Host(`dex.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: dex.jeans-box.example.com
+          - main: dex.sdi-1.alphahorizon.io
       service: dex
       entryPoints:
         - websecure
     liwasc:
-      rule: Host(`liwasc.jeans-box.example.com`)
+      rule: Host(`liwasc.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: liwasc.jeans-box.example.com
+          - main: liwasc.sdi-1.alphahorizon.io
       service: liwasc
       entryPoints:
         - websecure
     bofied:
-      rule: Host(`bofied.jeans-box.example.com`)
+      rule: Host(`bofied.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: bofied.jeans-box.example.com
+          - main: bofied.sdi-1.alphahorizon.io
       service: bofied
       entryPoints:
         - websecure
     apache:
-      rule: Host(`apache.felixs-sdi1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`apache.sdi-1.alphahorizon.io`) || HostRegexp(`{subdomain:[a-z]+}.apache.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: apache.felixs-sdi1.alphahorizon.io
-          - main: marx.apache.felixs-sdi1.alphahorizon.io
-          - main: kropotkin.apache.felixs-sdi1.alphahorizon.io
-          - main: secure.apache.felixs-sdi1.alphahorizon.io
+          - main: apache.sdi-1.alphahorizon.io
+          - main: marx.apache.sdi-1.alphahorizon.io
+          - main: kropotkin.apache.sdi-1.alphahorizon.io
+          - main: secure.apache.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     phpmyadmin:
-      rule: Host(`phpmyadmin.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`phpmyadmin.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: phpmyadmin.felixs-sdi1.alphahorizon.io
+          - main: phpmyadmin.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     ldapAccountManager:
-      rule: Host(`ldap-account-manager.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`ldap-account-manager.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: ldap-account-manager.felixs-sdi1.alphahorizon.io
+          - main: ldap-account-manager.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     nextcloud:
-      rule: Host(`nextcloud.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`nextcloud.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: nextcloud.felixs-sdi1.alphahorizon.io
+          - main: nextcloud.sdi-1.alphahorizon.io
       service: apache
       entryPoints:
         - websecure
     grafana:
-      rule: Host(`grafana.felixs-sdi1.alphahorizon.io`)
+      rule: Host(`grafana.sdi-1.alphahorizon.io`)
       tls:
         certResolver: letsencrypt
         domains:
-          - main: grafana.felixs-sdi1.alphahorizon.io
+          - main: grafana.sdi-1.alphahorizon.io
       service: grafana
       entryPoints:
         - websecure
@@ -223,7 +226,7 @@ http:
     dashboard:
       basicauth:
         users:
-          - "jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN." # htpasswd -nb htpasswd -nb jean asdf
+          - "jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN." # htpasswd -nb jean asdf
 
   services:
     cockpit:
@@ -261,6 +264,7 @@ http:
       insecureSkipVerify: true
 EOT
 
+sudo mkdir -p /var/lib/traefik /etc/traefik
 sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
 sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
 sudo systemctl daemon-reload
@@ -272,7 +276,7 @@ sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --permanent --add-port=8443/tcp
 sudo firewall-cmd --reload
 
-curl -Lu jean:asdf https://traefik.jeans-box.example.com/ # Test the Traefik dashboard
-ssh -p 8443 jean@jeans-box.example.com # Test SSH over TCP
-ssh -o ProxyCommand="openssl s_client -connect ssh.jeans-box.example.com:443 -quiet" jean # Test SSH over TLS
+curl -Lu jean:asdf https://traefik.sdi-1.alphahorizon.io/ # Test the Traefik dashboard
+ssh -p 8443 jean@sdi-1.alphahorizon.io # Test SSH over TCP
+ssh -o ProxyCommand="openssl s_client -connect ssh.sdi-1.alphahorizon.io:443 -quiet" jean # Test SSH over TLS
 ```

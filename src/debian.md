@@ -1,5 +1,7 @@
 # Debian
 
+> Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
+
 ```shell
 sudo umount /dev/mmcblk0{,p1,p0}
 curl -L 'https://raspi.debian.net/tested/20210823_raspi_3_bullseye.img.xz' | xzcat >/tmp/debian.img
@@ -11,7 +13,7 @@ sudo mount /dev/mmcblk0p1 /mnt/raspi-boot
 {
     echo "root_pw=$(openssl rand -base64 12)"
     echo "root_authorized_key=$(cat ~/.ssh/id_rsa.pub)"
-    echo "hostname=jeans-box"
+    echo "hostname=sdi-1"
 } >>/mnt/raspi-boot/sysconf.txt
 sudo umount /dev/mmcblk0{,p1,p0}
 ```
