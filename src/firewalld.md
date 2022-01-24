@@ -1,7 +1,9 @@
 # firewalld
 
+> Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
+
 ```shell
-ssh jean@jeans-box.example.com
+ssh jean@sdi-1.alphahorizon.io
 sudo apt update
 sudo apt install -y firewalld
 sudo systemctl enable --now firewalld
