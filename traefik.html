@@ -139,6 +139,7 @@
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml&lt;&lt;'EOT'
 entryPoints:
@@ -400,8 +401,10 @@ http:
 EOT
 
 sudo mkdir -p /var/lib/traefik
+
 sudo podman run -d --restart=always --label &quot;io.containers.autoupdate=image&quot; --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
 sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now traefik
 

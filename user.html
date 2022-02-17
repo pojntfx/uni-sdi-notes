@@ -139,6 +139,7 @@
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
 <pre><code class="language-shell">ssh root@sdi-1.alphahorizon.io
+
 echo &quot;LC_ALL=en_US.UTF-8&quot; | tee -a /etc/environment
 echo &quot;en_US.UTF-8 UTF-8&quot; | tee /etc/locale.gen
 echo &quot;LANG=en_US.UTF-8&quot; | tee /etc/locale.conf
