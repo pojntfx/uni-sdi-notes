@@ -3,6 +3,8 @@
 First, setup Gitea by visiting [https://gitea.sdi-1.alphahorizon.io/user/settings/applications](https://gitea.sdi-1.alphahorizon.io/user/settings/applications) and adding a new OAuth2 application with Application Name `Dex` and Redirect URI `https://dex.sdi-1.alphahorizon.io/callback`. Note the client ID and client secret; we'll need them in the following.
 
 ```shell
+ssh jean@sdi-1.alphahorizon.io
+
 sudo mkdir -p /etc/dex /var/lib/dex
 
 sudo touch /var/lib/dex/dex.db
@@ -45,6 +47,7 @@ EOT
 
 sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net slirp4netns:allow_host_loopback=true,enable_ipv6=true -p 5556:5556 -v /var/lib/dex:/var/dex -v /etc/dex:/etc/dex --name dex ghcr.io/dexidp/dex dex serve /etc/dex/config.yaml
 sudo podman generate systemd --new dex | sudo tee /lib/systemd/system/dex.service
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now dex
 ```
