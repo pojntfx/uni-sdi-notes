@@ -2,10 +2,12 @@
 
 ```shell
 ssh jean@sdi-1.alphahorizon.io
+
 sudo mkdir -p /var/lib/gitea
 
 sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net slirp4netns:allow_host_loopback=true,enable_ipv6=true -p 3000:3000 -p 3022:22 -v /var/lib/gitea/:/data -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e 'USER_UID=1000' -e 'USER_GID=1000' --name gitea gitea/gitea
 sudo podman generate systemd --new gitea | sudo tee /lib/systemd/system/gitea.service
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now gitea
 

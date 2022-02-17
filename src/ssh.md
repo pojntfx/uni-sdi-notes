@@ -4,6 +4,7 @@
 
 ```shell
 ssh root@sdi-1.alphahorizon.io
+
 apt update
 apt install -y sudo curl openssh-server locales
 systemctl enable --now ssh

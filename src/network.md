@@ -6,6 +6,7 @@
 
 ```shell
 ssh root@sdi-1
+
 tee /etc/sysctl.d/privacy.conf <<'EOT'
 net.ipv6.conf.all.use_tempaddr=2
 EOT

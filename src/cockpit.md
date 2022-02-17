@@ -4,6 +4,7 @@
 
 ```shell
 ssh jean@sdi-1.alphahorizon.io
+
 echo 'deb http://deb.debian.org/debian bullseye-backports main' | sudo tee /etc/apt/sources.list.d/backports.list
 sudo apt update
 sudo apt install -t bullseye-backports -y cockpit cockpit-podman cockpit-pcp

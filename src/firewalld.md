@@ -4,6 +4,7 @@
 
 ```shell
 ssh jean@sdi-1.alphahorizon.io
+
 sudo apt update
 sudo apt install -y firewalld
 sudo systemctl enable --now firewalld

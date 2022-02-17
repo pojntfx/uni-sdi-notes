@@ -4,6 +4,7 @@
 
 ```shell
 ssh jean@sdi-1.alphahorizon.io
+
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml<<'EOT'
 entryPoints:
@@ -265,8 +266,10 @@ http:
 EOT
 
 sudo mkdir -p /var/lib/traefik
+
 sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
 sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now traefik
 
