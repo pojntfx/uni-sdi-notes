@@ -264,7 +264,7 @@ http:
       insecureSkipVerify: true
 EOT
 
-sudo mkdir -p /var/lib/traefik /etc/traefik
+sudo mkdir -p /var/lib/traefik
 sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
 sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
 sudo systemctl daemon-reload
