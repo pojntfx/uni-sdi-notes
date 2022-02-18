@@ -1,76 +1,80 @@
 # LDAP
 
 ```shell
+ssh jean@sdi-1.alphahorizon.io
+
 sudo apt update
 sudo apt install -y slapd ldap-utils certbot
 
-sudo dpkg-reconfigure slapd # ldap.felicitass-sdi1.alphahorizon.io, felicitass-sdi1
+sudo dpkg-reconfigure slapd
+# Omit server configuration: No
+# DNS domain name: ldap.sdi-1.alphahorizon.io
+# Organization name: sdi-1
+# Do you want the DB to be purged: No
+# Move old database: Yes
 
-curl ldaps://ldap.felicitass-sdi1.alphahorizon.io:443 # Test the connection
+curl ldaps://ldap.sdi-1.alphahorizon.io:443 # Connect anonymously using cURL
+ldapwhoami -H 'ldaps://ldap.sdi-1.alphahorizon.io:443' -x # Connect anonymous using ldapwhoami
+ldapwhoami -H 'ldaps://ldap.sdi-1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io # Connect as admin using ldapwhoami
 
-socat tcp-listen:8389,fork openssl:ldap.felicitass-sdi1.alphahorizon.io:443 # Run this on the local system to connect with Apache Directory Studio as the latter does not send a SNI header/is not TLS compliant
-curl ldap://localhost:8389 # Test the proxy's connection
-
-# Connect in Apache Directory Studio with the following info:
+socat tcp-listen:8389,fork openssl:ldap.sdi-1.alphahorizon.io:443 # Create local TLS termination proxy to work around Apache Directory Studio's broken SNI implementation
+curl ldap://localhost:8389 # Test the local proxy using ldapwhoami
+# Test the local proxy using Apache Directory Studio:
 # Hostname: localhost
 # Port: 8389
-# Bind DN or user: cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+# Bind DN or user: cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 # Bind password: The password from `sudo dpkg-reconfigure slapd`
 
-# Connect with ldapwhoami like so:
-ldapwhoami -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -x # Anonymous
-ldapwhoami -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io # As admin
-
-# Now add the objects (you can create a password hash using `slappasswd | base64`):
-ldapadd -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io <<'EOT'
+ldapadd -H 'ldaps://ldap.sdi-1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io <<'EOT'
 version: 1
 
-dn: dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
-objectClass: dcObject
-objectClass: organization
-objectClass: top
-dc: ldap
-o: felicitass-sdi1
+# We already set these up using `dpkg-reconfigure`
 
-# We already set this up using `dpkg-reconfigure`
-# dn: cn=admin,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+# dn: dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
+# objectClass: dcObject
+# objectClass: organization
+# objectClass: top
+# dc: ldap
+# o: sdi-1
+
+# dn: cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 # objectClass: organizationalRole
 # objectClass: simpleSecurityObject
 # cn: admin
-# userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q=
+# userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q= # sudo slappasswd | base64
 # description: LDAP administrator
 
-dn: ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: departments
 
-dn: ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: software
 
-dn: ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=financial,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: financial
 
-dn: ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: devel
 
-dn: ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=testing,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: testing
 
-dn: ou=ops,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: organizationalUnit
 objectClass: top
 ou: ops
 
-dn: uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -78,11 +82,11 @@ objectClass: top
 cn: Audrey Bean
 sn: Bean
 givenName: Audrey
-mail: bean@ldap.felicitass-sdi1.alphahorizon.io
+mail: bean@ldap.sdi-1.alphahorizon.io
 uid: bean
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=smith,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=smith,ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -90,11 +94,11 @@ objectClass: top
 cn: Jane Smith
 sn: Smith
 givenName: Jane
-mail: smith@ldap.felicitass-sdi1.alphahorizon.io
+mail: smith@ldap.sdi-1.alphahorizon.io
 uid: smith
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=waibel,ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=waibel,ou=financial,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -107,10 +111,10 @@ sn: Waibel
 uid: waibel
 uidNumber: 1337
 givenName: Jakob
-mail: waibel@ldap.felicitass-sdi1.alphahorizon.io
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+mail: waibel@ldap.sdi-1.alphahorizon.io
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=simpson,ou=financial,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=simpson,ou=financial,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -118,23 +122,23 @@ objectClass: top
 cn: Homer Simpson
 sn: Simpson
 givenName: Homer
-mail: simpson@ldap.felicitass-sdi1.alphahorizon.io
+mail: simpson@ldap.sdi-1.alphahorizon.io
 uid: simpson
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=pojtinger,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=doe,ou=testing,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
 objectClass: top
-cn: Felicitas Pojtinger
-sn: Pojtinger
-givenName: Felicitas
-mail: pojtinger@ldap.felicitass-sdi1.alphahorizon.io
-uid: pojtinger
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+cn: Jean Doe
+sn: Doe
+givenName: Jean
+mail: doe@ldap.sdi-1.alphahorizon.io
+uid: doe
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=simpson,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=simpson,ou=testing,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -142,11 +146,11 @@ objectClass: top
 cn: Maggie Simpson
 sn: Simpson
 givenName: Maggie
-mail: simpson@ldap.felicitass-sdi1.alphahorizon.io
+mail: simpson@ldap.sdi-1.alphahorizon.io
 uid: simpson
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=aleimut,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=aleimut,ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -154,11 +158,11 @@ objectClass: top
 cn: Adelheit Aleimut
 sn: Aleimut
 givenName: Adelheit
-mail: aleimut@ldap.felicitass-sdi1.alphahorizon.io
+mail: aleimut@ldap.sdi-1.alphahorizon.io
 uid: aleimut
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=tibbie,ou=testing,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=tibbie,ou=testing,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -171,10 +175,10 @@ sn: Tibbie
 uid: tibbie
 uidNumber: 1234
 givenName: Oswald
-mail: tibbie@ldap.felicitass-sdi1.alphahorizon.io
-userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+mail: tibbie@ldap.sdi-1.alphahorizon.io
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 
-dn: uid=operator,ou=ops,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io
+dn: uid=operator,ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -187,10 +191,9 @@ sn: Operator
 uid: operatis
 uidNumber: 1235
 givenName: Operator
-mail: operator@ldap.felicitass-sdi1.alphahorizon.io
-userPassword:: e1NTSEF9Y1dtYUZ5Zi9HSTNTcFYyaktmYlpieUhEdFh5ek5wVEkK
+mail: operator@ldap.sdi-1.alphahorizon.io
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slappasswd | base64
 EOT
 
-# And test if we can access using a user
-ldapwhoami -H 'ldaps://ldap.felicitass-sdi1.alphahorizon.io:443' -W -D uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felicitass-sdi1,dc=alphahorizon,dc=io # As bean using password "password"
+ldapwhoami -H 'ldaps://ldap.sdi-1.alphahorizon.io:443' -W -D uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io # Connect as bean using ldapwhoami (using password "password")
 ```
