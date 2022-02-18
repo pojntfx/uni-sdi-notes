@@ -288,16 +288,17 @@ sudo systemctl enable --now podman-auto-update.timer
 sudo systemctl enable --now podman-restart
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="traefik"><a class="header" href="#traefik">Traefik</a></h1>
-<blockquote>
-<p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
-</blockquote>
+<h2 id="manager-sdi-1"><a class="header" href="#manager-sdi-1">Manager (<code>sdi-1</code>)</a></h2>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml&lt;&lt;'EOT'
 entryPoints:
-  dnsTcp:
+  dnsTCP:
     address: &quot;:53&quot;
+
+  dnsUDP:
+    address: &quot;:53/udp&quot;
 
   web:
     address: &quot;:80&quot;
@@ -343,7 +344,7 @@ udp:
   routers:
     dns:
       entryPoints:
-        - dnsUdp
+        - dnsUDP
       service: dns
   services:
     dns:
@@ -355,7 +356,7 @@ tcp:
   routers:
     dns:
       entryPoints:
-        - dnsTcp
+        - dnsTCP
       rule: HostSNI(`*`)
       service: dns
     ssh:
@@ -571,6 +572,153 @@ curl -Lu jean:asdf https://traefik.sdi-1.alphahorizon.io/ # Test the Traefik das
 ssh -p 8443 jean@sdi-1.alphahorizon.io # Test SSH over TCP
 ssh -o ProxyCommand=&quot;openssl s_client -connect ssh.sdi-1.alphahorizon.io:443 -quiet&quot; jean # Test SSH over TLS
 </code></pre>
+<h2 id="worker-sdi-2"><a class="header" href="#worker-sdi-2">Worker (<code>sdi-2</code>)</a></h2>
+<pre><code class="language-shell">ssh jean@sdi-2.alphahorizon.io
+
+sudo mkdir -p /etc/traefik
+sudo tee /etc/traefik/traefik.yaml&lt;&lt;'EOT'
+entryPoints:
+  dnsTCP:
+    address: &quot;:53&quot;
+
+  dnsUDP:
+    address: &quot;:53/udp&quot;
+
+  web:
+    address: &quot;:80&quot;
+
+  websecure:
+    address: &quot;:443&quot;
+
+  sshalt:
+    address: &quot;:2222&quot;
+
+  websecurealt:
+    address: &quot;:8443&quot;
+
+providers:
+  file:
+    filename: /etc/traefik/services.yaml
+    watch: true
+
+api:
+  dashboard: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jean@example.com
+      storage: /var/lib/traefik/acme.json
+      httpChallenge:
+        entryPoint: web
+
+log:
+  level: INFO
+EOT
+
+sudo tee /etc/traefik/services.yaml&lt;&lt;'EOT'
+udp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsUDP
+      service: dns
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+
+tcp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsTCP
+      rule: HostSNI(`*`)
+      service: dns
+    ssh:
+      entryPoints:
+        - websecurealt
+      rule: HostSNI(`*`)
+      service: ssh
+    sshOverTLS:
+      entryPoints:
+        - websecure
+      rule: HostSNI(`ssh.sdi-2.alphahorizon.io`)
+      service: ssh
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ssh.sdi-2.alphahorizon.io
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+    ssh:
+      loadBalancer:
+        servers:
+          - address: localhost:22
+
+http:
+  routers:
+    dashboard:
+      rule: Host(`traefik.sdi-2.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: traefik.sdi-2.alphahorizon.io
+      service: api@internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - dashboard
+    cockpit:
+      rule: Host(`cockpit.sdi-2.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: cockpit.sdi-2.alphahorizon.io
+      service: cockpit
+      entryPoints:
+        - websecure
+
+  middlewares:
+    dashboard:
+      basicauth:
+        users:
+          - &quot;jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN.&quot; # htpasswd -nb jean asdf
+
+  services:
+    cockpit:
+      loadBalancer:
+        serversTransport: cockpit
+        servers:
+          - url: https://localhost:9090
+
+  serversTransports:
+    cockpit:
+      insecureSkipVerify: true
+EOT
+
+sudo mkdir -p /var/lib/traefik
+
+sudo podman run -d --restart=always --label &quot;io.containers.autoupdate=image&quot; --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
+sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now traefik
+
+sudo firewall-cmd --permanent --add-service=dns
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-port=8443/tcp
+sudo firewall-cmd --reload
+
+curl -Lu jean:asdf https://traefik.sdi-2.alphahorizon.io/ # Test the Traefik dashboard
+ssh -p 8443 jean@sdi-2.alphahorizon.io # Test SSH over TCP
+ssh -o ProxyCommand=&quot;openssl s_client -connect ssh.sdi-2.alphahorizon.io:443 -quiet&quot; jean # Test SSH over TLS
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cockpit"><a class="header" href="#cockpit">Cockpit</a></h1>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
@@ -704,41 +852,55 @@ sudo firewall-cmd --reload
 <li>OIDC Redirect URL: <code>https://pojntfx.github.io/bofied/</code></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dns"><a class="header" href="#dns">DNS</a></h1>
-<h2 id="manager"><a class="header" href="#manager">Manager</a></h2>
-<pre><code class="language-shell">sudo apt update
+<blockquote>
+<p>You can convert the IPv6 addresses to nibble format using e.g. <a href="http://rdns6.com/nibble">rdns6.com/nibble</a></p>
+</blockquote>
+<h2 id="manager-sdi-1-1"><a class="header" href="#manager-sdi-1-1">Manager (<code>sdi-1</code>)</a></h2>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+
+sudo apt update
 sudo apt install -y bind9 bind9utils
 sudo systemctl enable --now named
 
-sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
-listen-on port 54 { 127.0.0.1; };
-listen-on-v6 port 54 { ::1; };
+sudo tee /etc/bind/named.conf.options &lt;&lt;'EOT'
+options {
+        directory &quot;/var/cache/bind&quot;;
 
-version &quot;not currently available&quot;;
-recursion yes;
-querylog yes;
-allow-transfer { none; };
-allow-query { any; };
+        dnssec-validation auto;
 
-sudo tee -a /etc/bind/named.conf.local &lt;&lt;'EOT'
+        listen-on port 54 { 127.0.0.1; };
+        listen-on-v6 port 54 { ::1; };
+
+        version &quot;not currently available&quot;;
+        recursion yes;
+        querylog yes;
+        allow-transfer { none; };
+        allow-query { any; };
+};
+EOT
+
+sudo tee /etc/bind/named.conf.local &lt;&lt;'EOT'
+include &quot;/etc/bind/zones.rfc1918&quot;;
+
 zone &quot;example.pojtinger&quot; {
         type master;
         file &quot;/etc/bind/db.example.pojtinger&quot;;
         allow-query { any; };
-        allow-transfer { 159.223.25.154; 2a03:b0c0:3:d0::1092:b001; };
+        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 
-zone &quot;70.68.138.in-addr.arpa&quot; {
+zone &quot;37.198.143.in-addr.arpa&quot; {
         type master;
-        file &quot;/etc/bind/db.70.68.138&quot;;
+        file &quot;/etc/bind/db.37.198.143&quot;;
         allow-query { any; };
-        allow-transfer { 159.223.25.154; 2a03:b0c0:3:d0::1092:b001; };
+        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 
-zone &quot;1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa&quot; {
+zone &quot;1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa&quot; {
         type master;
-        file &quot;/etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2&quot;;
+        file &quot;/etc/bind/db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2&quot;;
         allow-query { any; };
-        allow-transfer { 159.223.25.154; 2a03:b0c0:3:d0::1092:b001; };
+        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 EOT
 
@@ -752,22 +914,22 @@ example.pojtinger.      IN      SOA     ns1.example.pojtinger. hostmaster.exampl
 example.pojtinger.      IN      NS      ns1.example.pojtinger.
 example.pojtinger.      IN      NS      ns2.example.pojtinger.
 
-example.pojtinger.      IN      A       138.68.70.72
-example.pojtinger.      IN      AAAA    2a03:b0c0:3:d0::e34:5001
+example.pojtinger.      IN      A       143.198.37.173
+example.pojtinger.      IN      AAAA    2604:a880:cad:d0::d40:1001
 
-ns1.example.pojtinger.  IN      A       138.68.70.72
-ns1.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::e34:5001
+ns1.example.pojtinger.  IN      A       143.198.37.173
+ns1.example.pojtinger.  IN      AAAA    2604:a880:cad:d0::d40:1001
 
-ns2.example.pojtinger.  IN      A       159.223.25.154
-ns2.example.pojtinger.  IN      AAAA    2a03:b0c0:3:d0::1092:b001
+ns2.example.pojtinger.  IN      A       128.199.92.39
+ns2.example.pojtinger.  IN      AAAA    2400:6180:0:d0::1020:c001
 
 example.pojtinger.      IN      MX      1       fb.mail.gandi.net.
 www.example.pojtinger.  IN      CNAME   example.pojtinger.
 EOT
 
 # Increase `1634570724` by one and reload after each change to propagate changes to the worker
-sudo tee /etc/bind/db.70.68.138 &lt;&lt;'EOT'
-$ORIGIN 70.68.138.in-addr.arpa.
+sudo tee /etc/bind/db.37.198.143 &lt;&lt;'EOT'
+$ORIGIN 37.198.143.in-addr.arpa. ; IP is 143.198.37.173, so the suffix is 37.198.143
 $TTL 3600
 
 @       IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570724 7200 3600 1209600 3600 )
@@ -775,12 +937,12 @@ $TTL 3600
 @       IN      NS      ns1.example.pojtinger.
 @       IN      NS      ns2.example.pojtinger.
 
-72      IN      PTR     example.pojtinger.
+173    IN      PTR     example.pojtinger. ; IP is 143.198.37.173, so the prefix is 173
 EOT
 
 # Increase `1634570724` by one and reload after each change to propagate changes to the worker
-sudo tee /etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2 &lt;&lt;'EOT'
-$ORIGIN 1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa.
+sudo tee /etc/bind/db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2 &lt;&lt;'EOT'
+$ORIGIN 1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa.
 $TTL 3600
 
 @       IN      SOA     ns1.example.pojtinger. hostmaster.example.pojtinger.    ( 1634570724 7200 3600 1209600 3600 )
@@ -788,19 +950,33 @@ $TTL 3600
 @       IN      NS      ns1.example.pojtinger.
 @       IN      NS      ns2.example.pojtinger.
 
-1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa.       IN      PTR     example.pojtinger.
+1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa.       IN      PTR     example.pojtinger.
 EOT
 
 sudo named-checkconf
 
 sudo named-checkzone example.pojtinger /etc/bind/db.example.pojtinger
-sudo named-checkzone 70.68.138.in-addr.arpa. /etc/bind/db.70.68.138
-sudo named-checkzone 1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa. /etc/bind/db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2
+sudo named-checkzone 37.198.143.in-addr.arpa. /etc/bind/db.37.198.143
+sudo named-checkzone 1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa. /etc/bind/db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2
 
 sudo systemctl reload named
+
+# On the local system
+# Test DNS over TCP
+dig +noall +answer +tcp @sdi-1.alphahorizon.io example.pojtinger AAAA
+# Test DNS over UDP
+dig +noall +answer @sdi-1.alphahorizon.io example.pojtinger AAAA
+# Test configuration
+dig +noall +answer @sdi-1.alphahorizon.io example.pojtinger A
+dig +noall +answer @sdi-1.alphahorizon.io www.example.pojtinger CNAME
+dig +noall +answer @sdi-1.alphahorizon.io example.pojtinger MX
+dig +noall +answer @sdi-1.alphahorizon.io -x 2400:6180:0:d0::1020:c001
+dig +noall +answer @sdi-1.alphahorizon.io -x 143.198.37.173
 </code></pre>
-<h2 id="worker"><a class="header" href="#worker">Worker</a></h2>
-<pre><code class="language-shell">sudo apt update
+<h2 id="worker-sdi-2-1"><a class="header" href="#worker-sdi-2-1">Worker (<code>sdi-2</code>)</a></h2>
+<pre><code class="language-shell">ssh jean@sdi-2.alphahorizon.io
+
+sudo apt update
 sudo apt install -y bind9 bind9utils
 sudo systemctl enable --now named
 
@@ -819,21 +995,21 @@ zone &quot;example.pojtinger&quot; {
         type slave;
         file &quot;db.example.pojtinger&quot;;
         allow-query { any; };
-        masters { 138.68.70.72; 2a03:b0c0:3:d0::e34:5001; };
+        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 
-zone &quot;70.68.138.in-addr.arpa&quot; {
+zone &quot;128.199.92.in-addr.arpa&quot; {
         type slave;
-        file &quot;db.70.68.138&quot;;
+        file &quot;db.37.198.143&quot;;
         allow-query { any; };
-        masters { 138.68.70.72; 2a03:b0c0:3:d0::e34:5001; };
+        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 
-zone &quot;1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2.ip6.arpa&quot; {
+zone &quot;1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa&quot; {
         type slave;
-        file &quot;db.1.0.0.5.4.3.e.0.0.0.0.0.0.0.0.0.0.d.0.0.3.0.0.0.0.c.0.b.3.0.a.2&quot;;
+        file &quot;db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2&quot;;
         allow-query { any; };
-        masters { 138.68.70.72; 2a03:b0c0:3:d0::e34:5001; };
+        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 EOT
 
