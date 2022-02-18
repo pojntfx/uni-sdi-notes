@@ -1,6 +1,6 @@
 # Traefik
 
-> Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
+## Manager (`sdi-1`)
 
 ```shell
 ssh jean@sdi-1.alphahorizon.io
@@ -8,8 +8,11 @@ ssh jean@sdi-1.alphahorizon.io
 sudo mkdir -p /etc/traefik
 sudo tee /etc/traefik/traefik.yaml<<'EOT'
 entryPoints:
-  dnsTcp:
+  dnsTCP:
     address: ":53"
+
+  dnsUDP:
+    address: ":53/udp"
 
   web:
     address: ":80"
@@ -55,7 +58,7 @@ udp:
   routers:
     dns:
       entryPoints:
-        - dnsUdp
+        - dnsUDP
       service: dns
   services:
     dns:
@@ -67,7 +70,7 @@ tcp:
   routers:
     dns:
       entryPoints:
-        - dnsTcp
+        - dnsTCP
       rule: HostSNI(`*`)
       service: dns
     ssh:
@@ -282,4 +285,154 @@ sudo firewall-cmd --reload
 curl -Lu jean:asdf https://traefik.sdi-1.alphahorizon.io/ # Test the Traefik dashboard
 ssh -p 8443 jean@sdi-1.alphahorizon.io # Test SSH over TCP
 ssh -o ProxyCommand="openssl s_client -connect ssh.sdi-1.alphahorizon.io:443 -quiet" jean # Test SSH over TLS
+```
+
+## Worker (`sdi-2`)
+
+```shell
+ssh jean@sdi-2.alphahorizon.io
+
+sudo mkdir -p /etc/traefik
+sudo tee /etc/traefik/traefik.yaml<<'EOT'
+entryPoints:
+  dnsTCP:
+    address: ":53"
+
+  dnsUDP:
+    address: ":53/udp"
+
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+
+  sshalt:
+    address: ":2222"
+
+  websecurealt:
+    address: ":8443"
+
+providers:
+  file:
+    filename: /etc/traefik/services.yaml
+    watch: true
+
+api:
+  dashboard: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jean@example.com
+      storage: /var/lib/traefik/acme.json
+      httpChallenge:
+        entryPoint: web
+
+log:
+  level: INFO
+EOT
+
+sudo tee /etc/traefik/services.yaml<<'EOT'
+udp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsUDP
+      service: dns
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+
+tcp:
+  routers:
+    dns:
+      entryPoints:
+        - dnsTCP
+      rule: HostSNI(`*`)
+      service: dns
+    ssh:
+      entryPoints:
+        - websecurealt
+      rule: HostSNI(`*`)
+      service: ssh
+    sshOverTLS:
+      entryPoints:
+        - websecure
+      rule: HostSNI(`ssh.sdi-2.alphahorizon.io`)
+      service: ssh
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: ssh.sdi-2.alphahorizon.io
+  services:
+    dns:
+      loadBalancer:
+        servers:
+          - address: localhost:54
+    ssh:
+      loadBalancer:
+        servers:
+          - address: localhost:22
+
+http:
+  routers:
+    dashboard:
+      rule: Host(`traefik.sdi-2.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: traefik.sdi-2.alphahorizon.io
+      service: api@internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - dashboard
+    cockpit:
+      rule: Host(`cockpit.sdi-2.alphahorizon.io`)
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: cockpit.sdi-2.alphahorizon.io
+      service: cockpit
+      entryPoints:
+        - websecure
+
+  middlewares:
+    dashboard:
+      basicauth:
+        users:
+          - "jean:$apr1$dYdt8Zrl$TsEfzaedPGyjdrDk8EfRN." # htpasswd -nb jean asdf
+
+  services:
+    cockpit:
+      loadBalancer:
+        serversTransport: cockpit
+        servers:
+          - url: https://localhost:9090
+
+  serversTransports:
+    cockpit:
+      insecureSkipVerify: true
+EOT
+
+sudo mkdir -p /var/lib/traefik
+
+sudo podman run -d --restart=always --label "io.containers.autoupdate=image" --net=host -v /var/lib/traefik/:/var/lib/traefik -v /etc/traefik/:/etc/traefik --name traefik traefik
+sudo podman generate systemd --new traefik | sudo tee /lib/systemd/system/traefik.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now traefik
+
+sudo firewall-cmd --permanent --add-service=dns
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-port=8443/tcp
+sudo firewall-cmd --reload
+
+curl -Lu jean:asdf https://traefik.sdi-2.alphahorizon.io/ # Test the Traefik dashboard
+ssh -p 8443 jean@sdi-2.alphahorizon.io # Test SSH over TCP
+ssh -o ProxyCommand="openssl s_client -connect ssh.sdi-2.alphahorizon.io:443 -quiet" jean # Test SSH over TLS
 ```
