@@ -169,21 +169,21 @@ zone &quot;example.pojtinger&quot; {
         type master;
         file &quot;/etc/bind/db.example.pojtinger&quot;;
         allow-query { any; };
-        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
+        allow-transfer { 127.0.0.1; ::1; 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 
 zone &quot;37.198.143.in-addr.arpa&quot; {
         type master;
         file &quot;/etc/bind/db.37.198.143&quot;;
         allow-query { any; };
-        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
+        allow-transfer { 127.0.0.1; ::1; 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 
 zone &quot;1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa&quot; {
         type master;
         file &quot;/etc/bind/db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2&quot;;
         allow-query { any; };
-        allow-transfer { 128.199.92.39; 2400:6180:0:d0::1020:c001; };
+        allow-transfer { 127.0.0.1; ::1; 128.199.92.39; 2400:6180:0:d0::1020:c001; };
 };
 EOT
 
@@ -263,41 +263,63 @@ sudo apt update
 sudo apt install -y bind9 bind9utils
 sudo systemctl enable --now named
 
-sudo vi /etc/bind/named.conf.options # Now add the following at the end of the options block:
-listen-on port 54 { 127.0.0.1; };
-listen-on-v6 port 54 { ::1; };
+sudo tee /etc/bind/named.conf.options &lt;&lt;'EOT'
+options {
+        directory &quot;/var/cache/bind&quot;;
 
-version &quot;not currently available&quot;;
-recursion yes;
-querylog yes;
-allow-transfer { none; };
-allow-query { any; };
+        dnssec-validation auto;
 
-sudo tee -a /etc/bind/named.conf.local &lt;&lt;'EOT'
+        listen-on port 54 { 127.0.0.1; };
+        listen-on-v6 port 54 { ::1; };
+
+        version &quot;not currently available&quot;;
+        recursion yes;
+        querylog yes;
+        allow-transfer { none; };
+        allow-query { any; };
+};
+EOT
+
+sudo tee /etc/bind/named.conf.local &lt;&lt;'EOT'
+include &quot;/etc/bind/zones.rfc1918&quot;;
+
 zone &quot;example.pojtinger&quot; {
         type slave;
         file &quot;db.example.pojtinger&quot;;
         allow-query { any; };
-        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
+        masters { 127.0.0.1; ::1; 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 
-zone &quot;128.199.92.in-addr.arpa&quot; {
+zone &quot;37.198.143.in-addr.arpa&quot; {
         type slave;
-        file &quot;db.37.198.143&quot;;
+        file &quot;/etc/bind/db.37.198.143&quot;;
         allow-query { any; };
-        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
+        masters { 127.0.0.1; ::1; 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 
 zone &quot;1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2.ip6.arpa&quot; {
         type slave;
-        file &quot;db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2&quot;;
+        file &quot;/etc/bind/db.1.0.0.c.0.2.0.1.0.0.0.0.0.0.0.0.0.d.0.0.0.0.0.0.0.8.1.6.0.0.4.2&quot;;
         allow-query { any; };
-        masters { 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
+        masters { 127.0.0.1; ::1; 143.198.37.173; 2604:a880:cad:d0::d40:1001; };
 };
 EOT
 
 sudo named-checkconf
+
 sudo systemctl reload named
+
+# On the local system
+# Test DNS over TCP
+dig +noall +answer +tcp @sdi-2.alphahorizon.io example.pojtinger AAAA
+# Test DNS over UDP
+dig +noall +answer @sdi-2.alphahorizon.io example.pojtinger AAAA
+# Test configuration
+dig +noall +answer @sdi-2.alphahorizon.io example.pojtinger A
+dig +noall +answer @sdi-2.alphahorizon.io www.example.pojtinger CNAME
+dig +noall +answer @sdi-2.alphahorizon.io example.pojtinger MX
+dig +noall +answer @sdi-2.alphahorizon.io -x 2400:6180:0:d0::1020:c001
+dig +noall +answer @sdi-2.alphahorizon.io -x 143.198.37.173
 </code></pre>
 
                     </main>
