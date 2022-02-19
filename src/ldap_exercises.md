@@ -10,7 +10,7 @@ If your connection was successful, your user interface should look somewhat like
 
 ![A list of entries can be seen on the left. Otherwise, the screen is empty.](./assets/ldap_connection_success.png)
 
-## Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?
+### Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?
 
 Therefore, you right-click on the userlist and apply a filter on the children. This should work like displayed in the following two pictures.
 
@@ -36,7 +36,7 @@ After following the same steps while being logged in, the user entry should look
 
 ## Browsing an existing LDAP Server using `ldapsearch`
 
-### Setup ldapsearch to anonymously connect to ldap1.hdm-stuttgart.de using TLS.
+### Setup ldapsearch to anonymously connect to ldap1.hdm-stuttgart.de
 
 The following command connects to the LDAP server and displays the information below. The output is a shortened version, as there are too many user entries to display here.
 
@@ -182,7 +182,222 @@ result: 0 Success
 # numEntries: 1
 ```
 
-## Testing a bind operation as non - admin user
+## Setup an OpenLDAP server
+
+First of all, one might use the following commands to install some useful utilities.
+
+```shell
+# apt install dialog
+```
+
+```shell
+# apt install slapd
+```
+
+In the following, the admin password is set to `password`. Please make sure you are using a more secure password than we are when configuring your LDAP server.	
+
+With `dpkg-reconfigure slapd`, you can modify your base configuration. Following the dialog accordingly should lead to  a successful result.
+
+![First dialog page](./assets/ldap_1.png)
+
+![Second dialog page](./assets/ldap_2.png)
+
+![Third dialog page](./assets/ldap_3.png)
+
+![Forth dialog page](./assets/ldap_4.png)
+
+![Fifth dialog page](./assets/ldap_5.png)
+
+![Sixth dialog page](./assets/ldap_6.png)
+
+After setting up slapd, we can use `ss -tlnp` to verify that a server is running.
+
+```shell
+# ss -tlnp
+State                    Recv-Q                   Send-Q                                     Local Address:Port                                       Peer Address:Port                   Process                                             
+LISTEN                   0                        10                                         141.62.75.101:53                                              0.0.0.0:*                       users:(("named",pid=448,fd=19))                    
+LISTEN                   0                        10                                             127.0.0.1:53                                              0.0.0.0:*                       users:(("named",pid=448,fd=16))                    
+LISTEN                   0                        128                                              0.0.0.0:22                                              0.0.0.0:*                       users:(("sshd",pid=127,fd=3))                      
+LISTEN                   0                        4096                                           127.0.0.1:953                                             0.0.0.0:*                       users:(("named",pid=448,fd=21))                    
+LISTEN                   0                        100                                            127.0.0.1:25                                              0.0.0.0:*                       users:(("master",pid=292,fd=13))                   
+LISTEN                   0                        1024                                             0.0.0.0:389                                             0.0.0.0:*                       users:(("slapd",pid=7245,fd=8))                    
+LISTEN                   0                        128                                                 [::]:22                                                 [::]:*                       users:(("sshd",pid=127,fd=4))                      
+LISTEN                   0                        100                                                [::1]:25                                                 [::]:*                       users:(("master",pid=292,fd=14))                   
+LISTEN                   0                        1024                                                [::]:389                                                [::]:*                       users:(("slapd",pid=7245,fd=9))
+```
+
+```shell
+ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+dn: cn=config
+
+dn: cn=module{0},cn=config
+
+dn: cn=schema,cn=config
+
+dn: cn={0}core,cn=schema,cn=config
+
+dn: cn={1}cosine,cn=schema,cn=config
+
+dn: cn={2}nis,cn=schema,cn=config
+
+dn: cn={3}inetorgperson,cn=schema,cn=config
+
+dn: olcDatabase={-1}frontend,cn=config
+
+dn: olcDatabase={0}config,cn=config
+
+dn: olcDatabase={1}mdb,cn=config
+```
+
+```shell
+# ldapwhoami -x 
+anonymous
+```
+
+As mentioned in the task, we need to rename the `dc` to `betrayer.com`. So we just do `dpkg-reconfigure slapd` another time using the required information.
+
+![Rename dc to destroyer.com](./assets/ldap_destroyer.png)
+
+We can now use `ldapwhoami` with our configuration:
+
+```shell
+# ldapwhoami -x -D cn=admin,dc=betrayer,dc=com -W
+Enter LDAP Password: 
+dn:cn=admin,dc=betrayer,dc=com
+```
+
+We can connect to our server using Apache Directory Studio with the following configuration.
+
+![Connect to LDAP server](./assets/ldap_connect_openldap.png)
+
+To authorize as an administrator, we just use our admin credentials.
+
+![Connect as Administrator](./assets/openldap_admin.png)
+
+## Populating your DIT
+
+After creating our LDAP tree, it looks like this: 
+
+![LDAP tree](./assets/organizational_structure.png)
+
+Our export dump looks like this: 
+
+```ldif
+version: 1
+
+dn: dc=betrayer,dc=com
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: betrayer
+o: betrayer.com
+
+dn: cn=admin,dc=betrayer,dc=com
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+cn: admin
+userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q=
+description: LDAP administrator
+
+dn: ou=departments,dc=betrayer,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: departments
+
+dn: ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: software
+
+dn: ou=financial,ou=departments,dc=betrayer,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: financial
+
+dn: ou=devel,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: devel
+
+dn: ou=testing,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: testing
+
+dn: uid=bean,ou=devel,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Audrey Bean
+sn: Bean
+givenName: Audrey
+mail: bean@betrayer.com
+uid: bean
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=smith,ou=devel,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+mail: smith@betrayer.com
+uid: smith
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=waibel,ou=financial,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Jakob Waibel
+sn: Waibel
+givenName: Jakob
+mail: waibel@betrayer.com
+uid: waibel
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=simpson,ou=financial,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Homer Simpson
+sn: Simpson
+givenName: Homer
+mail: simpson@betrayer.com
+uid: simpson
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=pojtinger,ou=testing,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Felicitas Pojtinger
+sn: Pojtinger
+givenName: Felicitas
+mail: pojtinger@betrayer.com
+uid: pojtinger
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+
+dn: uid=simpson,ou=testing,ou=software,ou=departments,dc=betrayer,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Maggie Simpson
+sn: Simpson
+givenName: Maggie
+mail: simpson@betrayer.com
+uid: simpson
+userPassword:: e3NtZDV9YVhKL2JlVkF2TDRENk9pMFRLcDhjM3ovYTZQZzBXeHA=
+```
+
+## Testing a bind operation as non-admin user
 
 First we set a password for `bean`. In our case, we set the password to `password`.
 
@@ -375,7 +590,7 @@ cd /etc
 tar zcf /root/pam.tgz pam.conf pam.d
 ```
 
-We can then check if all worked correctly:
+We can then check if everything worked properly:
 
 ```bash
 # tar ztf /root/pam.tgz 
@@ -610,9 +825,7 @@ drwxr-xr-x  2 waibel users   5 Nov 17 21:32 jakob
 uid=1337(waibel) gid=100(users) groups=100(users)
 ```
 
-TODO: Are we finished here?
-
-## Backup and recovery / restore
+## Backup and recovery/restore
 
 First, we setup a second LDAP server on `sdi1b.mi.hdm-stuttgart.de`. 
 
@@ -729,7 +942,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Until here, everything should work
 	BaseDN := "dc=hdm-stuttgart,dc=de"
 	Filter := fmt.Sprintf("(uid=%s)", *uid)
 	searchReq := ldap.NewSearchRequest(
