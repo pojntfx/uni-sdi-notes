@@ -1,5 +1,9 @@
 # Cockpit
 
+Cockpit is a web-based graphical interface for servers[^note].
+
+[^note]: From the Cockpit website, last checked 2022-02-19 ([https://cockpit-project.org/](https://cockpit-project.org/))
+
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell

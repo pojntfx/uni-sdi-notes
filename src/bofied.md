@@ -1,5 +1,9 @@
 # bofied
 
+bofied is a network boot server[^note].
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/bofied](https://github.com/pojntfx/bofied))
+
 ```shell
 ssh jean@sdi-1.alphahorizon.io
 
