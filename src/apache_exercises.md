@@ -66,7 +66,7 @@ Now observe what's running on the website after reloading the service with `syst
 
 ### Provide your own root index.html document and access your server's root again.
 
-Now we can create our own `index.html`: 
+Now we can create our own `index.html` and inspect the result: 
 
 ```shell 
 # curl 127.0.0.1
@@ -547,7 +547,7 @@ The LDAP-Account-Manager can be reached with `sdi1a.mi.hdm-stuttgart.de/lam`:
 
 ![lam](./assets/lam.png)
 
-To configure LAM go to the `LAM Configuration`. The default "Master" password is `lam`. I changed this password to `password.
+To configure LAM go to the `LAM Configuration`. The default "Master" password is `lam`. We changed this password to `password`.
 
 ## Publish your documentation
 
