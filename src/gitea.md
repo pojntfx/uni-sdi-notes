@@ -17,7 +17,7 @@ sudo firewall-cmd --reload
 curl https://gitea.sdi-1.alphahorizon.io/ # Test Gitea
 ```
 
-Now visit [https://gitea.sdi-1.alphahorizon.io/](https://gitea.sdi-1.alphahorizon.io/) and run the Wizard; use the following values:
+Visit [https://gitea.sdi-1.alphahorizon.io/](https://gitea.sdi-1.alphahorizon.io/) and run the Wizard; use the following values:
 
 - Site Title: Jean's Gitea
 - SSH Server Domain: gitea.sdi-1.alphahorizon.io
