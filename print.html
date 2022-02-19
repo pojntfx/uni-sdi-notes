@@ -323,6 +323,11 @@ entryPoints:
 
   web:
     address: &quot;:80&quot;
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
 
   websecure:
     address: &quot;:443&quot;
@@ -607,6 +612,11 @@ entryPoints:
 
   web:
     address: &quot;:80&quot;
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
 
   websecure:
     address: &quot;:443&quot;
