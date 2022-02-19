@@ -25,8 +25,8 @@
 
 - [DNS](./dns.md)
 - [LDAP](./ldap.md)
-    - [Exercises](./ldap_exercises.md)
-    - [Script](./ldap_script.md)
+  - [Docs](./ldap_docs.md)
+  - [Exercises](./ldap_exercises.md)
 - [Apache](./apache.md)
 - [MariaDB](./mariadb.md)
 - [LAM](./lam.md)
