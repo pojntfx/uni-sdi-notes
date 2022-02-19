@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Base System</li><li class="chapter-item expanded "><a href="debian.html"><strong aria-hidden="true">1.</strong> Debian</a></li><li class="chapter-item expanded "><a href="network.html"><strong aria-hidden="true">2.</strong> Network</a></li><li class="chapter-item expanded "><a href="user.html"><strong aria-hidden="true">3.</strong> User</a></li><li class="chapter-item expanded "><a href="ssh.html"><strong aria-hidden="true">4.</strong> SSH</a></li><li class="chapter-item expanded "><a href="firewalld.html"><strong aria-hidden="true">5.</strong> firewalld</a></li><li class="chapter-item expanded "><a href="apt.html"><strong aria-hidden="true">6.</strong> APT</a></li><li class="chapter-item expanded "><a href="podman.html"><strong aria-hidden="true">7.</strong> Podman</a></li><li class="chapter-item expanded "><a href="traefik.html"><strong aria-hidden="true">8.</strong> Traefik</a></li><li class="chapter-item expanded "><a href="cockpit.html"><strong aria-hidden="true">9.</strong> Cockpit</a></li><li class="chapter-item expanded affix "><li class="part-title">Cloud-Native Services</li><li class="chapter-item expanded "><a href="gitea.html"><strong aria-hidden="true">10.</strong> Gitea</a></li><li class="chapter-item expanded "><a href="dex.html"><strong aria-hidden="true">11.</strong> Dex</a></li><li class="chapter-item expanded "><a href="liwasc.html"><strong aria-hidden="true">12.</strong> liwasc</a></li><li class="chapter-item expanded "><a href="bofied.html"><strong aria-hidden="true">13.</strong> bofied</a></li><li class="chapter-item expanded affix "><li class="part-title">Traditional Services</li><li class="chapter-item expanded "><a href="dns.html"><strong aria-hidden="true">14.</strong> DNS</a></li><li class="chapter-item expanded "><a href="ldap.html"><strong aria-hidden="true">15.</strong> LDAP</a></li><li class="chapter-item expanded "><a href="apache.html"><strong aria-hidden="true">16.</strong> Apache</a></li><li class="chapter-item expanded "><a href="mariadb.html"><strong aria-hidden="true">17.</strong> MariaDB</a></li><li class="chapter-item expanded "><a href="lam.html"><strong aria-hidden="true">18.</strong> LAM</a></li><li class="chapter-item expanded "><a href="nextcloud.html"><strong aria-hidden="true">19.</strong> Nextcloud</a></li><li class="chapter-item expanded "><a href="prometheus.html"><strong aria-hidden="true">20.</strong> Prometheus</a></li><li class="chapter-item expanded "><a href="grafana.html"><strong aria-hidden="true">21.</strong> Grafana</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Base System</li><li class="chapter-item expanded "><a href="debian.html"><strong aria-hidden="true">1.</strong> Debian</a></li><li class="chapter-item expanded "><a href="network.html"><strong aria-hidden="true">2.</strong> Network</a></li><li class="chapter-item expanded "><a href="user.html"><strong aria-hidden="true">3.</strong> User</a></li><li class="chapter-item expanded "><a href="ssh.html"><strong aria-hidden="true">4.</strong> SSH</a></li><li class="chapter-item expanded "><a href="firewalld.html"><strong aria-hidden="true">5.</strong> firewalld</a></li><li class="chapter-item expanded "><a href="apt.html"><strong aria-hidden="true">6.</strong> APT</a></li><li class="chapter-item expanded "><a href="podman.html"><strong aria-hidden="true">7.</strong> Podman</a></li><li class="chapter-item expanded "><a href="traefik.html"><strong aria-hidden="true">8.</strong> Traefik</a></li><li class="chapter-item expanded "><a href="cockpit.html"><strong aria-hidden="true">9.</strong> Cockpit</a></li><li class="chapter-item expanded affix "><li class="part-title">Cloud-Native Services</li><li class="chapter-item expanded "><a href="gitea.html"><strong aria-hidden="true">10.</strong> Gitea</a></li><li class="chapter-item expanded "><a href="dex.html"><strong aria-hidden="true">11.</strong> Dex</a></li><li class="chapter-item expanded "><a href="liwasc.html"><strong aria-hidden="true">12.</strong> liwasc</a></li><li class="chapter-item expanded "><a href="bofied.html"><strong aria-hidden="true">13.</strong> bofied</a></li><li class="chapter-item expanded affix "><li class="part-title">Traditional Services</li><li class="chapter-item expanded "><a href="dns.html"><strong aria-hidden="true">14.</strong> DNS</a></li><li class="chapter-item expanded "><a href="ldap.html"><strong aria-hidden="true">15.</strong> LDAP</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ldap_exercises.html"><strong aria-hidden="true">15.1.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="ldap_script.html"><strong aria-hidden="true">15.2.</strong> Script</a></li></ol></li><li class="chapter-item expanded "><a href="apache.html"><strong aria-hidden="true">16.</strong> Apache</a></li><li class="chapter-item expanded "><a href="mariadb.html"><strong aria-hidden="true">17.</strong> MariaDB</a></li><li class="chapter-item expanded "><a href="lam.html"><strong aria-hidden="true">18.</strong> LAM</a></li><li class="chapter-item expanded "><a href="nextcloud.html"><strong aria-hidden="true">19.</strong> Nextcloud</a></li><li class="chapter-item expanded "><a href="prometheus.html"><strong aria-hidden="true">20.</strong> Prometheus</a></li><li class="chapter-item expanded "><a href="grafana.html"><strong aria-hidden="true">21.</strong> Grafana</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1234,6 +1234,842 @@ userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8= # sudo slapp
 EOT
 
 ldapwhoami -H 'ldaps://ldap.sdi-1.alphahorizon.io:443' -W -D uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io # Connect as bean using ldapwhoami (using password &quot;password&quot;)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ldap-exercises"><a class="header" href="#ldap-exercises">LDAP Exercises</a></h1>
+<h2 id="browsing-an-existing-ldap-server-using-apache-directory-studio"><a class="header" href="#browsing-an-existing-ldap-server-using-apache-directory-studio">Browsing an existing LDAP Server using Apache Directory Studio</a></h2>
+<p>To setup Apache Directory Studio to connect to the LDAP server, create a new connection with the following properties: </p>
+<p><img src="./assets/ldap_connection.png" alt="The graphic depicts the following properties. Connection name = SDI, Hostname = ldap1.hdm-stuttgart.de, Port = 389 and Connection timeout = 30" /></p>
+<p>If your connection was successful, your user interface should look somewhat like this: </p>
+<p><img src="./assets/ldap_connection_success.png" alt="A list of entries can be seen on the left. Otherwise, the screen is empty." /></p>
+<h2 id="use-a-filter-like-uid-xy234-to-find-your-personal-entry-beneath-ouuserlistdchdm-stuttgartdcde-use-the-corresponding-dn-eg-uidxy234-ouuserlistdchdm-stuttgartdcde-to-reconnect-using-password-authentication-then-browse-your-own-entry-again-can-you-spot-any-difference"><a class="header" href="#use-a-filter-like-uid-xy234-to-find-your-personal-entry-beneath-ouuserlistdchdm-stuttgartdcde-use-the-corresponding-dn-eg-uidxy234-ouuserlistdchdm-stuttgartdcde-to-reconnect-using-password-authentication-then-browse-your-own-entry-again-can-you-spot-any-difference">Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?</a></h2>
+<p>Therefore, you right-click on the userlist and apply a filter on the children. This should work like displayed in the following two pictures.</p>
+<p><img src="./assets/ldap_filter_children_on.png" alt="The organizational unit userlist is highlighted." /></p>
+<p><img src="./assets/ldap_filter_children.png" alt="Apply the filter (uid=jw163)" /></p>
+<p>As one can see in the picture below, the entry appears and can be examined further by clicking on it.</p>
+<p><img src="./assets/ldap_filter_children_result.png" alt="The result depicts one child in the userlist with the uid jw163" /></p>
+<p>The other option to find ones own entry is to create a search. The content should look somewhat like in the following picture.</p>
+<p><img src="./assets/ldap_create_search.png" alt="The search has the following properties. Search Base = uid=jw163, ou=userlist, dc=hdm-stutgart, dc=de and Filter = (objectClass=*)" /></p>
+<p>Then ones user should be found and can be examined. </p>
+<p><img src="./assets/ldap_search_results.png" alt="Search was applied and outputs the user jw163" /></p>
+<p>After following the same steps while being logged in, the user entry should look more like in the following picture. As one can see, some more personal information like the hash of the users password or his student-identification number is provided.</p>
+<p><img src="./assets/ldap_jw_information_logged_in.png" alt="Verbose result" /></p>
+<h2 id="browsing-an-existing-ldap-server-using-ldapsearch"><a class="header" href="#browsing-an-existing-ldap-server-using-ldapsearch">Browsing an existing LDAP Server using <code>ldapsearch</code></a></h2>
+<h3 id="setup-ldapsearch-to-anonymously-connect-to-ldap1hdm-stuttgartde-using-tls"><a class="header" href="#setup-ldapsearch-to-anonymously-connect-to-ldap1hdm-stuttgartde-using-tls">Setup ldapsearch to anonymously connect to ldap1.hdm-stuttgart.de using TLS.</a></h3>
+<p>The following command connects to the LDAP server and displays the information below. The output is a shortened version, as there are too many user entries to display here.</p>
+<pre><code class="language-shell">$ ldapsearch -x -b &quot;ou=userlist,dc=hdm-stuttgart,dc=de&quot; -H ldap://ldap1.hdm-stuttgart.de
+</code></pre>
+<pre><code class="language-shell"># gast39, userlist, hdm-stuttgart.de
+dn: uid=gast39,ou=userlist,dc=hdm-stuttgart,dc=de
+hdmCategory: 4
+sn: fixme
+loginShell: /bin/sh
+uidNumber: 46139
+gidNumber: 35102
+uid: gast39
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: hdmAccount
+objectClass: hdmSambaDomain
+objectClass: eduPerson
+cn:: dW5rbm93biA=
+homeDirectory: /home/stud/XX/gast39
+givenName: Gast
+eduPersonAffiliation: faculty
+eduPersonAffiliation: library-walk-in
+
+# gast38, userlist, hdm-stuttgart.de
+dn: uid=gast38,ou=userlist,dc=hdm-stuttgart,dc=de
+hdmCategory: 4
+sn: fixme
+loginShell: /bin/sh
+uidNumber: 46138
+gidNumber: 35102
+uid: gast38
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: hdmAccount
+objectClass: hdmSambaDomain
+objectClass: eduPerson
+cn:: dW5rbm93biA=
+homeDirectory: /home/stud/XX/gast38
+givenName: Gast
+eduPersonAffiliation: faculty
+eduPersonAffiliation: library-walk-in
+</code></pre>
+<h3 id="use-a-filter-like-uid-xy234-to-find-your-personal-entry-beneath-ouuserlistdchdm-stuttgartdcde-use-the-corresponding-dn-eg-uidxy234-ouuserlistdchdm-stuttgartdcde-to-reconnect-using-password-authentication-then-browse-your-own-entry-again-can-you-spot-any-difference-1"><a class="header" href="#use-a-filter-like-uid-xy234-to-find-your-personal-entry-beneath-ouuserlistdchdm-stuttgartdcde-use-the-corresponding-dn-eg-uidxy234-ouuserlistdchdm-stuttgartdcde-to-reconnect-using-password-authentication-then-browse-your-own-entry-again-can-you-spot-any-difference-1">Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?	</a></h3>
+<pre><code class="language-shell">$ ldapsearch -x -b &quot;uid=jw163, ou=userlist,dc=hdm-stuttgart,dc=de&quot; -H ldap://ldap1.hdm-stuttgart.de
+# extended LDIF
+#
+# LDAPv3
+# base &lt;uid=jw163, ou=userlist,dc=hdm-stuttgart,dc=de&gt; with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# jw163, userlist, hdm-stuttgart.de
+dn: uid=jw163,ou=userlist,dc=hdm-stuttgart,dc=de
+displayName: Waibel Jakob Elias
+employeeType: student
+objectClass: hdmAccount
+objectClass: hdmStudent
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: eduPerson
+eduPersonAffiliation: member
+eduPersonAffiliation: student
+eduPersonAffiliation: library-walk-in
+uid: jw163
+mail: jw163@hdm-Stuttgart.de
+uidNumber: 67828
+cn: Waibel Jakob Elias
+loginShell: /bin/sh
+hdmCategory: 1
+gidNumber: 100
+givenName: Jakob Elias
+homeDirectory: /home/stud/j/jw163
+sn: Waibel
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+</code></pre>
+<p>After being logged in, we can spot some more information:</p>
+<pre><code class="language-shell">$ ldapsearch -x -D &quot;uid=jw163, ou=userlist,dc=hdm-stuttgart,dc=de&quot;  -W -H ldap://ldap1.hdm-stuttgart.de -b &quot; uid=jw163, ou=userlist,dc=hdm-stuttgart,dc=de&quot;  -s sub 'uid=jw163'
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base &lt; uid=jw163, ou=userlist,dc=hdm-stuttgart,dc=de&gt; with scope subtree
+# filter: uid=jw163
+# requesting: ALL
+#
+
+# jw163, userlist, hdm-stuttgart.de
+dn: uid=jw163,ou=userlist,dc=hdm-stuttgart,dc=de
+businessCategory: 1
+businessCategory: {11112-3}
+employeeType: student
+postOfficeBox: 2G
+objectClass: hdmAccount
+objectClass: hdmStudent
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: eduPerson
+eduPersonAffiliation: member
+eduPersonAffiliation: student
+eduPersonAffiliation: library-walk-in
+uid: jw163
+mail: jw163@hdm-Stuttgart.de
+uidNumber: 67828
+cn: Waibel Jakob Elias
+loginShell: /bin/sh
+hdmCategory: 1
+gidNumber: 100
+employeeNumber: CENSORED
+givenName: Jakob Elias
+homeDirectory: /home/stud/j/jw163
+sn: Waibel
+matrikelNr: CENSORED 
+userPassword:: CENSORED
+shadowLastChange: 18316
+sambaNTPassword: CENSORED
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+</code></pre>
+<h2 id="testing-a-bind-operation-as-non---admin-user"><a class="header" href="#testing-a-bind-operation-as-non---admin-user">Testing a bind operation as non - admin user</a></h2>
+<p>First we set a password for <code>bean</code>. In our case, we set the password to <code>password</code>.</p>
+<p><img src="./assets/bean_pw.png" alt="Set password for bean" /></p>
+<p>Afterwards we create a new connection with the following properties for the authentication section:</p>
+<p><img src="./assets/bean.png" alt="Bean authentication" /></p>
+<p>After that, our new connection looks like this: </p>
+<p><img src="./assets/bean_auth.png" alt="Bean view" /></p>
+<h2 id="extending-an-existing-entry"><a class="header" href="#extending-an-existing-entry">Extending an existing entry</a></h2>
+<p>To extend an existing entry and to add a <code>posixAccount</code>, one needs to right-click on the <code>objectClass</code> attribute and click on <code>New Value</code>.</p>
+<p><img src="./assets/posix.png" alt="posixAccount" /></p>
+<p>After that look for the <code>posixAccount</code> like displayed in the screenshot and <code>Add</code> it so it appears in the right column. After clicking <code>Next</code>, one needs to specify a valid <code>gidNumber</code>, <code>homeDirectory</code> and <code>uidNumber</code>. Now complete the configuration by clicking on <code>Finish</code>.</p>
+<h2 id="filter-based-search"><a class="header" href="#filter-based-search">Filter based search</a></h2>
+<h3 id="all-users-with-a-uid-attribute-value-starting-with-the-letter-b"><a class="header" href="#all-users-with-a-uid-attribute-value-starting-with-the-letter-b">All users with a uid attribute value starting with the letter “b”.</a></h3>
+<p><img src="./assets/users_start_with_b.png" alt="Search properties" /></p>
+<p><img src="./assets/result_starts_with_b.png" alt="Search results" /></p>
+<h3 id="all-entries-either-with-either-a-defined-uid-attribute-or-a-ou-attribute-starting-with-letter-d"><a class="header" href="#all-entries-either-with-either-a-defined-uid-attribute-or-a-ou-attribute-starting-with-letter-d">All entries either with either a defined uid attribute or a ou attribute starting with letter “d”.</a></h3>
+<p><img src="./assets/filter_defined_uid_ou_starting_with_d.png" alt="Search properties" /></p>
+<p><img src="./assets/uid_or_starts_with_d.png" alt="Search results" /></p>
+<h3 id="all-users-entries-within-the-whole-dit-having-a-gidnumber-value-of-100"><a class="header" href="#all-users-entries-within-the-whole-dit-having-a-gidnumber-value-of-100">All users entries within the whole DIT having a gidNumber value of 100.</a></h3>
+<p><img src="./assets/gid100.png" alt="Search properties" /></p>
+<p><img src="./assets/gid100_result.png" alt="Search results" /></p>
+<h3 id="all-user-entries-belonging-to-the-billing-department-having-a-uid-value-greater-than-1023"><a class="header" href="#all-user-entries-belonging-to-the-billing-department-having-a-uid-value-greater-than-1023">All user entries belonging to the billing department having a uid value greater than 1023.</a></h3>
+<p><img src="./assets/uid1023.png" alt="Search properties" /></p>
+<p><img src="./assets/uid1023_result.png" alt="Search results" /></p>
+<h3 id="all-user-entries-within-the-whole-dit-having-a-commonname-containing-the-substring-ei"><a class="header" href="#all-user-entries-within-the-whole-dit-having-a-commonname-containing-the-substring-ei">All user entries within the whole DIT having a commonName containing the substring “ei”.</a></h3>
+<p><img src="./assets/ei.png" alt="Search properties" /></p>
+<p><img src="./assets/ei_result.png" alt="Search results" /></p>
+<h3 id="all-user-entries-within-the-whole-dit-belonging-to-gidnumber--100-or-having-a-uid-value-starting-with-letter-t"><a class="header" href="#all-user-entries-within-the-whole-dit-belonging-to-gidnumber--100-or-having-a-uid-value-starting-with-letter-t">All user entries within the whole DIT belonging to gidNumber == 100 or having a uid value starting with letter “t”.</a></h3>
+<p><img src="./assets/100_t.png" alt="Search properties" /></p>
+<p><img src="./assets/100_t_result.png" alt="Search results" /></p>
+<h2 id="accessing-ldap-data-by-a-mail-client"><a class="header" href="#accessing-ldap-data-by-a-mail-client">Accessing LDAP data by a mail client</a></h2>
+<p>To use LDAP data with a mail client, it is necessary to add a new address book. It's configuration is displayed in the picture below:</p>
+<p><img src="./assets/mail_configuration.png" alt="Address book configuration" /></p>
+<p>After configuring the address book, addresses are only available when searching. As shown in the following picture, we can now find the fictional characters we created when populating our tree. </p>
+<p><img src="./assets/mail_example.png" alt="Example of LDAP Address" /></p>
+<h2 id="ldap-configuration"><a class="header" href="#ldap-configuration">LDAP configuration</a></h2>
+<pre><code class="language-bash"># ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+# extended LDIF
+#
+# LDAPv3
+# base &lt;cn=config&gt; with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# config
+dn: cn=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: /var/run/slapd/slapd.args
+olcLogLevel: none
+olcPidFile: /var/run/slapd/slapd.pid
+olcToolThreads: 1
+
+# module{0}, config
+dn: cn=module{0},cn=config
+objectClass: olcModuleList
+cn: module{0}
+olcModulePath: /usr/lib/ldap
+olcModuleLoad: {0}back_mdb
+
+# schema, config
+dn: cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: schema
+olcObjectIdentifier: OLcfg 1.3.6.1.4.1.4203.1.12.2
+olcObjectIdentifier: OLcfgAt OLcfg:3
+olcObjectIdentifier: OLcfgGlAt OLcfgAt:0
+...
+olcDatabase: {-1}frontend
+olcAccess: {0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external
+ ,cn=auth manage by * break
+olcAccess: {1}to dn.exact=&quot;&quot; by * read
+olcAccess: {2}to dn.base=&quot;cn=Subschema&quot; by * read
+olcSizeLimit: 500
+
+# {0}config, config
+dn: olcDatabase={0}config,cn=config
+objectClass: olcDatabaseConfig
+olcDatabase: {0}config
+olcAccess: {0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external
+ ,cn=auth manage by * break
+olcRootDN: cn=admin,cn=config
+
+# {1}mdb, config
+dn: olcDatabase={1}mdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDatabase: {1}mdb
+olcDbDirectory: /var/lib/ldap
+olcSuffix: dc=betrayer,dc=com
+olcAccess: {0}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {1}to attrs=shadowLastChange by self write by * read
+olcAccess: {2}to * by * read
+olcLastMod: TRUE
+olcRootDN: cn=admin,dc=betrayer,dc=com
+olcRootPW: {SSHA}0mF0mX3FUNd0zZ0u3bKPQQA1ubycnHvh
+olcDbCheckpoint: 512 30
+olcDbIndex: objectClass eq
+olcDbIndex: cn,uid eq
+olcDbIndex: uidNumber,gidNumber eq
+olcDbIndex: member,memberUid eq
+olcDbMaxSize: 1073741824
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 11
+# numEntries: 10
+</code></pre>
+<p>As mentioned in the task, we find the required information near the end of the output. In the first occurence of <code>oldRootDN</code>, where <code>olcRootDN: cn=admin,cn=config</code>, no passwort is set afterwards. In the second occurence <code>olcRootDN=cn=admin,dc=betrayer,dc=com</code>, a password is set with <code>oldRootPW</code>. This password not being specified implies that configuration access is limited to localhost.</p>
+<p>To change these settings, we must create a LDIF file which sets the required properties. A password hash can be generated using a website like: https://projects.marsching.org/weave4j/util/genpassword.php. We chose to use the password <code>password</code> again. </p>
+<pre><code class="language-bash"># cat add_olcRootPW.ldif 
+dn: olcDatabase={0}config,cn=config
+replace: olcRootPW
+olcRootPW: {ssha}U1oLsngiAsXhFQrav5UzHxn2/9qPNcL+
+</code></pre>
+<pre><code class="language-bash"># ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f ~/add_olcRootPW.ldif
+modifying entry &quot;olcDatabase={0}config,cn=config&quot;
+
+</code></pre>
+<p><img src="./assets/1.png" alt="Network parameters for configuration connection" /></p>
+<p><img src="./assets/2.png" alt="Authentication for configuration connection" /></p>
+<p><img src="./assets/3.png" alt="Browser Options for configuration connection" /></p>
+<p>After connecting, we can set the <code>olcLogLevel</code>. There are multiple options to set the log level to. We decided to get the most information possible, which is achieved by using the <code>olcLogLevel</code> of <code>-1</code>. </p>
+<p><img src="./assets/set_loglevel.png" alt="Set Log Level" /></p>
+<p>Now we can look at the syslog with <code>cat /var/log/syslog</code>. </p>
+<p><img src="./assets/syslog.png" alt="Displaying Syslog" /></p>
+<h2 id="ldap-based-user-login"><a class="header" href="#ldap-based-user-login">LDAP based user login</a></h2>
+<p>First, we create a backup of our working PAM configuration.</p>
+<pre><code class="language-bash">cd /etc
+tar zcf /root/pam.tgz pam.conf pam.d
+</code></pre>
+<p>We can then check if all worked correctly:</p>
+<pre><code class="language-bash"># tar ztf /root/pam.tgz 
+pam.conf
+pam.d/
+pam.d/passwd
+pam.d/sshd
+pam.d/common-auth
+pam.d/common-session-noninteractive
+pam.d/runuser-l
+pam.d/su
+pam.d/other
+pam.d/su-l
+pam.d/cron
+pam.d/runuser
+pam.d/common-password
+pam.d/chpasswd
+pam.d/common-session
+pam.d/chsh
+pam.d/login
+pam.d/common-account
+pam.d/newusers
+pam.d/chfn
+</code></pre>
+<p>Install <code>libpam-ldapd</code> via <code>apt install libpam-ldapd</code>.</p>
+<p>Configure the server like displayed in the following screenshots.</p>
+<p><img src="./assets/ldapd_1.png" alt="Configure server URI" /></p>
+<p><img src="./assets/ldapd_2.png" alt="Configure LDAP search base" /></p>
+<p><img src="./assets/ldapd_3.png" alt="Configure services" /></p>
+<p>Then we reboot our server and continue the configuration.</p>
+<p>Test your LDAP setup: </p>
+<pre><code class="language-bash"># id waibel
+uid=1337(waibel) gid=100(users) groups=100(users)
+</code></pre>
+<p>Edit the <code>passwd</code>, <code>group</code> and <code>shadow</code> line in your <code>/etc/nsswitch.conf</code> so that they look similar than in our configuration: </p>
+<pre><code class="language-bash"># cat /etc/nsswitch.conf 
+# /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc &quot;Name Service Switch&quot;' for information about this file.
+
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+gshadow:        files
+
+hosts:          files dns
+networks:       files
+
+protocols:      db files
+services:       db files
+ethers:         db files
+rpc:            db files
+
+netgroup:       nis
+</code></pre>
+<p>Make sure that <code>PasswordAuthentication</code> is set to <code>no</code> in <code>/etc/ssh/sshd_config</code>:</p>
+<pre><code class="language-bash"># cat /etc/ssh/sshd_config
+#	$OpenBSD: sshd_config,v 1.103 2018/04/09 20:41:22 tj Exp $
+
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+
+# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options override the
+# default value.
+
+Include /etc/ssh/sshd_config.d/*.conf
+
+#Port 22
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+
+# Logging
+#SyslogFacility AUTH
+#LogLevel INFO
+
+# Authentication:
+
+#LoginGraceTime 2m
+#PermitRootLogin prohibit-password
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+#PubkeyAuthentication yes
+
+# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+#AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
+
+#AuthorizedPrincipalsFile none
+
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
+
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication no
+#PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of &quot;PermitRootLogin without-password&quot;.
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM yes
+
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+PrintMotd no
+#PrintLastLog yes
+#TCPKeepAlive yes
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem	sftp	/usr/lib/openssh/sftp-server
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server
+</code></pre>
+<p>To make sure the results are not influenced by unwanted caching, we stop the <code>nscd</code> service.</p>
+<pre><code class="language-bash"># systemctl stop nscd
+# systemctl status nscd
+● nscd.service - Name Service Cache Daemon
+     Loaded: loaded (/lib/systemd/system/nscd.service; enabled; vendor preset:&gt;
+     Active: inactive (dead) since Wed 2021-11-17 21:26:35 CET; 4s ago
+    Process: 77 ExecStart=/usr/sbin/nscd (code=exited, status=0/SUCCESS)
+    Process: 364 ExecStop=/usr/sbin/nscd --shutdown (code=exited, status=0/SUC&gt;
+   Main PID: 80 (code=exited, status=0/SUCCESS)
+
+Nov 17 21:17:27 sdi1b nscd[80]: 80 monitoring directory `/etc` (2)
+Nov 17 21:17:27 sdi1b nscd[80]: 80 monitoring file `/etc/services` (6)
+Nov 17 21:17:27 sdi1b nscd[80]: 80 monitoring directory `/etc` (2)
+Nov 17 21:17:27 sdi1b nscd[80]: 80 disabled inotify-based monitoring for file &gt;
+Nov 17 21:17:27 sdi1b nscd[80]: 80 stat failed for file `/etc/netgroup'; will &gt;
+Nov 17 21:17:27 sdi1b systemd[1]: Started Name Service Cache Daemon.
+Nov 17 21:17:46 sdi1b nscd[80]: 80 checking for monitored file `/etc/netgroup'&gt;
+Nov 17 21:26:35 sdi1b systemd[1]: Stopping Name Service Cache Daemon...
+Nov 17 21:26:35 sdi1b systemd[1]: nscd.service: Succeeded.
+Nov 17 21:26:35 sdi1b systemd[1]: Stopped Name Service Cache Daemon.
+</code></pre>
+<p>With <code>mkhomedir_helper waibel</code>, we create a new homedirectory and modify the access rights. The result should look somewhat like this:</p>
+<pre><code class="language-bash">drwxr-xr-x  2 waibel users   5 Nov 17 21:32 jakob
+</code></pre>
+<pre><code class="language-bash"># id waibel
+uid=1337(waibel) gid=100(users) groups=100(users)
+</code></pre>
+<p>TODO: Are we finished here?</p>
+<h2 id="backup-and-recovery--restore"><a class="header" href="#backup-and-recovery--restore">Backup and recovery / restore</a></h2>
+<p>First, we setup a second LDAP server on <code>sdi1b.mi.hdm-stuttgart.de</code>. </p>
+<p>Now we dump the configuration and the data into ldif files.</p>
+<pre><code class="language-bash"># slapcat -b cn=config -l ldap-config.ldif 
+# slapcat -l ldap-data.ldif
+</code></pre>
+<p>After creating an ssh-key on <code>sdi1a</code> and adding its public key to the <code>authorized_keys</code> file on <code>sdi1b</code> we can use scp to transfer the files from <code>sdi1a</code> to <code>sdi1b</code>.</p>
+<pre><code class="language-bash"># scp {ldap-config.ldif,ldap-data.ldif} root@sdi1b.mi.hdm-stuttgart.de:~
+ldap-config.ldif                             100%   38KB  18.0MB/s   00:00    
+ldap-data.ldif                               100% 7977    19.0MB/s   00:00    
+</code></pre>
+<p>On <code>sdi1b</code> we stop the <code>slapd</code> service with <code>systemctl stop slapd</code> and we restore the configuration and data using <code>slapadd</code>:</p>
+<pre><code class="language-bash"># slapadd -b cn=config -l ~/ldap-config.ldif -F /etc/ldap/slapd.d/
+# slapadd -n 1 -l ~/ldap-data.ldif -F /etc/ldap/slapd.d/
+</code></pre>
+<p>To ensure everything worked, we create a new ldif file based on the data on the backup server. Afterwards, the new ldif file can be displayed and we can see that everything worked.</p>
+<pre><code class="language-bash"># slapcat -l ldap-data-b.ldif
+</code></pre>
+<pre><code class="language-bash"># cat ldap-data-b.ldif 
+dn: dc=betrayer,dc=com
+structuralObjectClass: organization
+entryUUID: 1c2b9bf0-d8b8-103b-9330-2bdbf336837c
+creatorsName: cn=admin,dc=betrayer,dc=com
+createTimestamp: 20211113102755Z
+objectClass: organization
+objectClass: dcObject
+objectClass: top
+dc: betrayer
+o: betrayer.com
+entryCSN: 20211115133040.851821Z#000000#000#000000
+modifiersName: cn=admin,dc=betrayer,dc=com
+modifyTimestamp: 20211115133040Z
+
+dn: cn=admin,dc=betrayer,dc=com
+description: LDAP administrator
+cn: admin
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q=
+structuralObjectClass: organizationalRole
+entryUUID: f89e4158-da63-103b-9b6b-03efa5ff8503
+creatorsName: cn=admin,dc=betrayer,dc=com
+createTimestamp: 20211115133040Z
+entryCSN: 20211115133040.866711Z#000000#000#000000
+modifiersName: cn=admin,dc=betrayer,dc=com
+modifyTimestamp: 20211115133040Z
+
+dn: ou=departments,dc=betrayer,dc=com
+ou: departments
+objectClass: top
+objectClass: organizationalUnit
+structuralObjectClass: organizationalUnit
+entryUUID: f89f5066-da63-103b-9b6c-03efa5ff8503
+creatorsName: cn=admin,dc=betrayer,dc=com
+createTimestamp: 20211115133040Z
+entryCSN: 20211115133040.873650Z#000000#000#000000
+modifiersName: cn=admin,dc=betrayer,dc=com
+modifyTimestamp: 20211115133040Z
+
+dn: ou=software,ou=departments,dc=betrayer,dc=com
+ou: software
+objectClass: top
+objectClass: organizationalUnit
+structuralObjectClass: organizationalUnit
+entryUUID: f8a05240-da63-103b-9b6d-03efa5ff8503
+creatorsName: cn=admin,dc=betrayer,dc=com
+createTimestamp: 20211115133040Z
+entryCSN: 20211115133040.880251Z#000000#000#000000
+modifiersName: cn=admin,dc=betrayer,dc=com
+modifyTimestamp: 20211115133040Z
+...
+</code></pre>
+<h2 id="accessing-ldap-by-a-go-application"><a class="header" href="#accessing-ldap-by-a-go-application">Accessing LDAP by a Go application</a></h2>
+<pre><code class="language-Go">package main
+
+import (
+	&quot;flag&quot;
+	&quot;fmt&quot;
+	&quot;log&quot;
+
+	&quot;github.com/go-ldap/ldap&quot;
+)
+
+func main() {
+	uid := flag.String(&quot;uid&quot;, &quot;&quot;, &quot;User-Id e.g. jw163&quot;)
+	password := flag.String(&quot;pw&quot;, &quot;&quot;, &quot;Password e.g. password&quot;)
+	flag.Parse()
+
+	ldapURL := &quot;ldaps://ldap1.mi.hdm-stuttgart.de&quot;
+	l, err := ldap.DialURL(ldapURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer l.Close()
+	err = l.Bind(fmt.Sprintf(&quot;uid=%s, ou=userlist,dc=hdm-stuttgart,dc=de&quot;, *uid), *password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Until here, everything should work
+	BaseDN := &quot;dc=hdm-stuttgart,dc=de&quot;
+	Filter := fmt.Sprintf(&quot;(uid=%s)&quot;, *uid)
+	searchReq := ldap.NewSearchRequest(
+		BaseDN,
+		ldap.ScopeWholeSubtree,
+		ldap.NeverDerefAliases,
+		0,
+		0,
+		false,
+		Filter,
+		[]string{},
+		nil,
+	)
+	result, err := l.Search(searchReq)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if len(result.Entries) &gt; 0 {
+		result.PrettyPrint(4)
+	} else {
+		fmt.Println(&quot;Couldn't fetch search entries&quot;)
+	}
+}
+</code></pre>
+<p>When executing the program, the output looks like this: </p>
+<pre><code class="language-bash">$ go run main.go --uid=jw163 --pw=CENSORED
+    DN: uid=jw163,ou=userlist,dc=hdm-stuttgart,dc=de
+      objectClass: [hdmAccount hdmStudent inetOrgPerson posixAccount shadowAccount eduPerson]
+      uid: [jw163]
+      mail: [jw163@hdm-Stuttgart.de]
+      uidNumber: [67828]
+      cn: [Waibel Jakob Elias]
+      loginShell: [/bin/sh]
+      hdmCategory: [1]
+      gidNumber: [100]
+      givenName: [Jakob Elias]
+      homeDirectory: [/home/stud/j/jw163]
+      sn: [Waibel]
+      matrikelNr: [40062]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="script"><a class="header" href="#script">Script</a></h1>
+<pre><code class="language-shell">sudo apt update
+sudo apt install -y slapd ldap-utils certbot
+
+sudo dpkg-reconfigure slapd # ldap.felixs-sdi1.alphahorizon.io, felixs-sdi1
+
+curl ldaps://ldap.felixs-sdi1.alphahorizon.io:443 # Test the connection
+
+socat tcp-listen:8389,fork openssl:ldap.felixs-sdi1.alphahorizon.io:443 # Run this on the local system to connect with Apache Directory Studio as the latter does not send a SNI header/is not TLS compliant
+curl ldap://localhost:8389 # Test the proxy's connection
+
+# Connect in Apache Directory Studio with the following info:
+# Hostname: localhost
+# Port: 8389
+# Bind DN or user: cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+# Bind password: The password from `sudo dpkg-reconfigure slapd`
+
+# Connect with ldapwhoami like so:
+ldapwhoami -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -x # Anonymous
+ldapwhoami -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io # As admin
+
+# Now add the objects (you can create a password hash using `slappasswd | base64`):
+ldapadd -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -W -D cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io &lt;&lt;'EOT'
+version: 1
+
+dn: dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: ldap
+o: felixs-sdi1
+
+# We already set this up using `dpkg-reconfigure`
+# dn: cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+# objectClass: organizationalRole
+# objectClass: simpleSecurityObject
+# cn: admin
+# userPassword:: e1NTSEF9cEhFK0VQT0cyZ3lSeU9nanZGcXNXT2I1ekdzR2w5Q0Q=
+# description: LDAP administrator
+
+dn: ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: departments
+
+dn: ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: software
+
+dn: ou=financial,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: financial
+
+dn: ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: devel
+
+dn: ou=testing,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: testing
+
+dn: ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: organizationalUnit
+objectClass: top
+ou: ops
+
+dn: uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Audrey Bean
+sn: Bean
+givenName: Audrey
+mail: bean@ldap.felixs-sdi1.alphahorizon.io
+uid: bean
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=smith,ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+mail: smith@ldap.felixs-sdi1.alphahorizon.io
+uid: smith
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=waibel,ou=financial,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Jakob Waibel
+gidNumber: 100
+homeDirectory: /usr/jakob
+sn: Waibel
+uid: waibel
+uidNumber: 1337
+givenName: Jakob
+mail: waibel@ldap.felixs-sdi1.alphahorizon.io
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=simpson,ou=financial,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Homer Simpson
+sn: Simpson
+givenName: Homer
+mail: simpson@ldap.felixs-sdi1.alphahorizon.io
+uid: simpson
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=pojtinger,ou=testing,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Felix Pojtinger
+sn: Pojtinger
+givenName: Felix
+mail: pojtinger@ldap.felixs-sdi1.alphahorizon.io
+uid: pojtinger
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=simpson,ou=testing,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Maggie Simpson
+sn: Simpson
+givenName: Maggie
+mail: simpson@ldap.felixs-sdi1.alphahorizon.io
+uid: simpson
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=aleimut,ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Adelheit Aleimut
+sn: Aleimut
+givenName: Adelheit
+mail: aleimut@ldap.felixs-sdi1.alphahorizon.io
+uid: aleimut
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=tibbie,ou=testing,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Oswald Tibbie
+gidNumber: 100
+homeDirectory: /usr/oswald
+sn: Tibbie
+uid: tibbie
+uidNumber: 1234
+givenName: Oswald
+mail: tibbie@ldap.felixs-sdi1.alphahorizon.io
+userPassword:: e1NTSEF9NGxCMnc4dThQRXI5Rjd3VGZjN3ltNWkwUDk5N3dOeS8=
+
+dn: uid=operator,ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: posixAccount
+objectClass: top
+cn: Operator Operatis
+gidNumber: 100
+homeDirectory: /usr/operator
+sn: Operator
+uid: operatis
+uidNumber: 1235
+givenName: Operator
+mail: operator@ldap.felixs-sdi1.alphahorizon.io
+userPassword:: e1NTSEF9Y1dtYUZ5Zi9HSTNTcFYyaktmYlpieUhEdFh5ek5wVEkK
+EOT
+
+# And test if we can access using a user
+ldapwhoami -H 'ldaps://ldap.felixs-sdi1.alphahorizon.io:443' -W -D uid=bean,ou=devel,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io # As bean using password &quot;password&quot;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="apache"><a class="header" href="#apache">Apache</a></h1>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
