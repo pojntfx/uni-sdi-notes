@@ -2,8 +2,6 @@
 
 Podman is a daemonless container engine for developing, managing, and running OCI Containers on your Linux System[^note].
 
-[^note]: From the Podman website, last checked 2022-02-19 ([https://podman.io/](https://podman.io/))
-
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell
@@ -20,3 +18,5 @@ sudo systemctl unmask podman-auto-update.timer
 sudo systemctl enable --now podman-auto-update.timer
 sudo systemctl enable --now podman-restart
 ```
+
+[^note]: From the Podman website, last checked 2022-02-19 ([https://podman.io/](https://podman.io/))

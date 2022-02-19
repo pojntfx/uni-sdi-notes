@@ -2,8 +2,6 @@
 
 firewalld is a firewall management tool for Linux operating systems[^note].
 
-[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Firewalld](https://en.wikipedia.org/wiki/Firewalld))
-
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell
@@ -17,3 +15,5 @@ sudo firewall-cmd --permanent --add-service=mdns
 sudo firewall-cmd --permanent --add-service=llmnr
 sudo firewall-cmd --reload
 ```
+
+[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Firewalld](https://en.wikipedia.org/wiki/Firewalld))

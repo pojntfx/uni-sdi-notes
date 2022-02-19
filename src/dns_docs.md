@@ -1,5 +1,7 @@
 # DNS Docs
 
+> You can convert the IPv6 addresses to nibble format using e.g. [rdns6.com/nibble](http://rdns6.com/nibble)
+
 ## Manager (`sdi-1`)
 
 ```shell

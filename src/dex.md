@@ -2,8 +2,6 @@
 
 Dex is an identity service that uses OpenID Connect to drive authentication for other apps[^note].
 
-[^note]: From the Dex website, last checked 2022-02-19 ([https://dexidp.io/](https://dexidp.io/))
-
 First, setup Gitea by visiting [https://gitea.sdi-1.alphahorizon.io/user/settings/applications](https://gitea.sdi-1.alphahorizon.io/user/settings/applications) and adding a new OAuth2 application with Application Name `Dex` and Redirect URI `https://dex.sdi-1.alphahorizon.io/callback`. Note the client ID and client secret; we'll need them in the following.
 
 ```shell
@@ -64,3 +62,5 @@ You can test it out by visiting [https://pojntfx.github.io/liwasc/](https://pojn
 - OIDC Redirect URL: `https://pojntfx.github.io/liwasc/`
 
 And authorization prompt from Gitea and Dex should show up, after which liwasc's home page should load (showing an error like `Failed to construct 'WebSocket': An insecure WebSocket connection may not be initiated from a page loaded over HTTPS.`).
+
+[^note]: From the Dex website, last checked 2022-02-19 ([https://dexidp.io/](https://dexidp.io/))

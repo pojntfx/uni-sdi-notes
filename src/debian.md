@@ -2,8 +2,6 @@
 
 Debian, also known as Debian GNU/Linux, is a GNU/Linux distribution composed of free and open-source software, developed by the community-supported Debian Project, which was established by Ian Murdock on August 16, 1993[^note].
 
-[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Debian](https://en.wikipedia.org/wiki/Debian))
-
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell
@@ -21,3 +19,5 @@ sudo mount /dev/mmcblk0p1 /mnt/raspi-boot
 } >>/mnt/raspi-boot/sysconf.txt
 sudo umount /dev/mmcblk0{,p1,p0}
 ```
+
+[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Debian](https://en.wikipedia.org/wiki/Debian))
