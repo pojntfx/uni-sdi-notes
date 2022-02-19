@@ -547,7 +547,7 @@ http:
     grafana:
       loadBalancer:
         servers:
-          - url: http://localhost:3000
+          - url: http://localhost:3001
 
   serversTransports:
     cockpit:
@@ -747,7 +747,7 @@ sudo firewall-cmd --reload
 
 curl https://gitea.sdi-1.alphahorizon.io/ # Test Gitea
 </code></pre>
-<p>Now visit <a href="https://gitea.sdi-1.alphahorizon.io/">https://gitea.sdi-1.alphahorizon.io/</a> and run the Wizard; use the following values:</p>
+<p>Visit <a href="https://gitea.sdi-1.alphahorizon.io/">https://gitea.sdi-1.alphahorizon.io/</a> and run the Wizard; use the following values:</p>
 <ul>
 <li>Site Title: Jean's Gitea</li>
 <li>SSH Server Domain: gitea.sdi-1.alphahorizon.io</li>
@@ -827,7 +827,7 @@ sudo podman generate systemd --new liwasc | sudo tee /lib/systemd/system/liwasc.
 sudo systemctl daemon-reload
 sudo systemctl enable --now liwasc
 </code></pre>
-<p>Now visit <a href="https://pojntfx.github.io/liwasc/">https://pojntfx.github.io/liwasc/</a> as we did before and use <code>wss://liwasc.sdi-1.alphahorizon.io/</code> as the backend URL (note the trailing slash!).</p>
+<p>Visit <a href="https://pojntfx.github.io/liwasc/">https://pojntfx.github.io/liwasc/</a> as we did before and use <code>wss://liwasc.sdi-1.alphahorizon.io/</code> as the backend URL (note the trailing slash!).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bofied"><a class="header" href="#bofied">bofied</a></h1>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
@@ -844,7 +844,7 @@ sudo firewall-cmd --permanent --add-port=69/udp
 sudo firewall-cmd --permanent --add-port=4011/udp
 sudo firewall-cmd --reload
 </code></pre>
-<p>Now visit <a href="https://pojntfx.github.io/bofied/">https://pojntfx.github.io/bofied/</a> and login using the following credentials:</p>
+<p>Visit <a href="https://pojntfx.github.io/bofied/">https://pojntfx.github.io/bofied/</a> and login using the following credentials:</p>
 <ul>
 <li>Backend URL: <code>https://bofied.sdi-1.alphahorizon.io/</code></li>
 <li>OIDC Issuer: <code>https://dex.sdi-1.alphahorizon.io</code></li>
@@ -1563,7 +1563,7 @@ sudo systemctl reload apache2
 
 curl https://nextcloud.sdi-1.alphahorizon.io/ # Test the Nextcloud site
 
-# Now visit https://nextcloud.sdi-1.alphahorizon.io/index.php and create an admin account
+# Visit https://nextcloud.sdi-1.alphahorizon.io/index.php and create an admin account
 # - Set `nextcloud` as the database user
 # - Set `yourpassword` as the database password
 # - Set `nextcloud` as the database name
@@ -1626,9 +1626,13 @@ scrape_configs:
 EOT
 
 sudo systemctl reload prometheus
+
+curl http://localhost:9091/metrics # Test Prometheus
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="grafana"><a class="header" href="#grafana">Grafana</a></h1>
-<pre><code class="language-shell">sudo apt update
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+
+sudo apt update
 sudo apt install -y apt-transport-https software-properties-common
 
 curl -L https://packages.grafana.com/gpg.key | sudo apt-key add -
@@ -1640,6 +1644,9 @@ sudo apt install -y grafana
 sudo systemctl enable --now grafana-server
 
 sudo vi /etc/grafana/grafana.ini
+# Replace the `[server]` block with the following:
+[server]
+http_port = 3001
 # Replace the `[auth.ldap]` block with the following:
 [auth.ldap]
 enabled = true
@@ -1652,11 +1659,11 @@ filters = ldap:debug
 [smtp]
 enabled = true
 host = mail.gandi.net:465
-user = felixs-sdi1@alphahorizon.io
-password = OHUyaDNtd2VhZmhld290NGgK
-from_address = felixs-sdi1@alphahorizon.io
+user = sdi-1@alphahorizon.io
+password = yourpassword
+from_address = jeans-grafana@alphahorizon.io
 from_name = Grafana
-ehlo_identity = grafana.felixs-sdi1.alphahorizon.io
+ehlo_identity = grafana.sdi-1.alphahorizon.io
 
 sudo tee /etc/grafana/ldap.toml &lt;&lt;'EOT'
 [[servers]]
@@ -1666,11 +1673,11 @@ use_ssl = false
 start_tls = false
 ssl_skip_verify = false
 
-bind_dn = &quot;cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io&quot;
-bind_password = 'yourldapadminpasswordfromdpkgconfigure'
+bind_dn = &quot;cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io&quot;
+bind_password = 'yourpassword'
 search_filter = &quot;(uid=%s)&quot;
-#search_base_dns = [&quot;dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io&quot;] # If we were to use groups
-search_base_dns = [&quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io&quot;]
+#search_base_dns = [&quot;dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io&quot;] # If we were to use groups
+search_base_dns = [&quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io&quot;]
 
 [servers.attributes]
 name = &quot;givenName&quot;
@@ -1681,11 +1688,11 @@ email =  &quot;email&quot;
 
 # Would be useful if we were to use groups
 #[[servers.group_mappings]]
-#group_dn = &quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io&quot;
+#group_dn = &quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io&quot;
 #org_role = &quot;Admin&quot;
 #
 #[[servers.group_mappings]]
-#group_dn = &quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io&quot;
+#group_dn = &quot;ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io&quot;
 #org_role = &quot;Editor&quot;
 #
 #[[servers.group_mappings]]
@@ -1699,17 +1706,15 @@ EOT
 
 sudo systemctl restart grafana-server
 
-# Visit https://grafana.felixs-sdi1.alphahorizon.io/?orgId=1 and login as `operator` using the password from above; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
+curl https://grafana.sdi-1.alphahorizon.io/ # Test the Grafana site
 
-# Now add a datasource, select Prometheus and use `http://localhost:9090` as the URL
-
-# Now go to create, import and select `1860` as the ID (https://grafana.com/grafana/dashboards/1860)
-
-# Now go to Alerting, create alert with name `HostDiskWillFillIn24Hours` and type `Grafana managed alert` using the following query: `(node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes &lt; 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~&quot;tmpfs&quot;}[1h], 24 * 3600) &lt; 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0`, `Filesystem is predicted to run out of space within the next 24 hours at current write rate\n VALUE = {{ $value }}\n LABELS: {{ $labels }}` as description, `Host disk will fill in 24 hours (instance {{ $labels.instance }})` as the summary and `serverity=warning` as the labels.
-
-# Now go to https://grafana.felixs-sdi1.alphahorizon.io/alerting/notifications/receivers/grafana-default-email/edit?alertmanager=grafana, enter your Email, and click on &quot;Test&quot;. Now check your inbox, a test mail should have arrived.
-
-# Now go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
+# Visit https://grafana.sdi-1.alphahorizon.io/ and login as `operator` using the password from LDAP; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
+# - Go to configuration, add a datasource and select Prometheus and use `http://localhost:9091` as the URL
+# - Go to create, import and select `1860` as the ID (https://grafana.com/grafana/dashboards/1860), then select Prometheus as the data source
+# - Go to create, folder and set `Main` as the name
+# - Go to alerting, create alert with name `HostDiskWillFillIn24Hours`, type `Grafana managed alert` and folder `Mail` using the following query: `(node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes &lt; 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~&quot;tmpfs&quot;}[1h], 24 * 3600) &lt; 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0`, `Host disk will fill in 24 hours (instance {{ $labels.instance }})` as the summary, `Filesystem is predicted to run out of space within the next 24 hours at current write rate\n VALUE = {{ $value }}\n LABELS: {{ $labels }}` as description and `serverity=warning` as the labels.
+# - Go to https://grafana.sdi-1.alphahorizon.io/alerting/notifications/receivers/grafana-default-email/edit?alertmanager=grafana, enter your Email, and click on &quot;Test&quot;. Now check your inbox, a test mail should have arrived.
+# - Go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
 </code></pre>
 
                     </main>
