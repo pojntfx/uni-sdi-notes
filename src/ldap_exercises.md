@@ -182,7 +182,7 @@ result: 0 Success
 # numEntries: 1
 ```
 
-## Testing a bind operation as non - admin user
+## Testing a bind operation as non-admin user
 
 First we set a password for `bean`. In our case, we set the password to `password`.
 
@@ -612,7 +612,7 @@ uid=1337(waibel) gid=100(users) groups=100(users)
 
 TODO: Are we finished here?
 
-## Backup and recovery / restore
+## Backup and recovery/restore
 
 First, we setup a second LDAP server on `sdi1b.mi.hdm-stuttgart.de`. 
 
