@@ -1,6 +1,8 @@
 # Grafana
 
 ```shell
+ssh jean@sdi-1.alphahorizon.io
+
 sudo apt update
 sudo apt install -y apt-transport-https software-properties-common
 
@@ -13,6 +15,9 @@ sudo apt install -y grafana
 sudo systemctl enable --now grafana-server
 
 sudo vi /etc/grafana/grafana.ini
+# Replace the `[server]` block with the following:
+[server]
+http_port = 3001
 # Replace the `[auth.ldap]` block with the following:
 [auth.ldap]
 enabled = true
@@ -25,11 +30,11 @@ filters = ldap:debug
 [smtp]
 enabled = true
 host = mail.gandi.net:465
-user = felixs-sdi1@alphahorizon.io
-password = OHUyaDNtd2VhZmhld290NGgK
-from_address = felixs-sdi1@alphahorizon.io
+user = sdi-1@alphahorizon.io
+password = yourpassword
+from_address = jeans-grafana@alphahorizon.io
 from_name = Grafana
-ehlo_identity = grafana.felixs-sdi1.alphahorizon.io
+ehlo_identity = grafana.sdi-1.alphahorizon.io
 
 sudo tee /etc/grafana/ldap.toml <<'EOT'
 [[servers]]
@@ -39,11 +44,11 @@ use_ssl = false
 start_tls = false
 ssl_skip_verify = false
 
-bind_dn = "cn=admin,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
-bind_password = 'yourldapadminpasswordfromdpkgconfigure'
+bind_dn = "cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io"
+bind_password = 'yourpassword'
 search_filter = "(uid=%s)"
-#search_base_dns = ["dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"] # If we were to use groups
-search_base_dns = ["ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"]
+#search_base_dns = ["dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io"] # If we were to use groups
+search_base_dns = ["ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io"]
 
 [servers.attributes]
 name = "givenName"
@@ -54,11 +59,11 @@ email =  "email"
 
 # Would be useful if we were to use groups
 #[[servers.group_mappings]]
-#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
+#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io"
 #org_role = "Admin"
 #
 #[[servers.group_mappings]]
-#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=felixs-sdi1,dc=alphahorizon,dc=io"
+#group_dn = "ou=ops,ou=software,ou=departments,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io"
 #org_role = "Editor"
 #
 #[[servers.group_mappings]]
@@ -72,15 +77,13 @@ EOT
 
 sudo systemctl restart grafana-server
 
-# Visit https://grafana.felixs-sdi1.alphahorizon.io/?orgId=1 and login as `operator` using the password from above; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
+curl https://grafana.sdi-1.alphahorizon.io/ # Test the Grafana site
 
-# Now add a datasource, select Prometheus and use `http://localhost:9090` as the URL
-
-# Now go to create, import and select `1860` as the ID (https://grafana.com/grafana/dashboards/1860)
-
-# Now go to Alerting, create alert with name `HostDiskWillFillIn24Hours` and type `Grafana managed alert` using the following query: `(node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0`, `Filesystem is predicted to run out of space within the next 24 hours at current write rate\n VALUE = {{ $value }}\n LABELS: {{ $labels }}` as description, `Host disk will fill in 24 hours (instance {{ $labels.instance }})` as the summary and `serverity=warning` as the labels.
-
-# Now go to https://grafana.felixs-sdi1.alphahorizon.io/alerting/notifications/receivers/grafana-default-email/edit?alertmanager=grafana, enter your Email, and click on "Test". Now check your inbox, a test mail should have arrived.
-
-# Now go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
+# Visit https://grafana.sdi-1.alphahorizon.io/ and login as `operator` using the password from LDAP; they will be admin. If we had set up roles, logging in as `bean` using `password` would make them a viewer.
+# - Go to configuration, add a datasource and select Prometheus and use `http://localhost:9091` as the URL
+# - Go to create, import and select `1860` as the ID (https://grafana.com/grafana/dashboards/1860), then select Prometheus as the data source
+# - Go to create, folder and set `Main` as the name
+# - Go to alerting, create alert with name `HostDiskWillFillIn24Hours`, type `Grafana managed alert` and folder `Mail` using the following query: `(node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0`, `Host disk will fill in 24 hours (instance {{ $labels.instance }})` as the summary, `Filesystem is predicted to run out of space within the next 24 hours at current write rate\n VALUE = {{ $value }}\n LABELS: {{ $labels }}` as description and `serverity=warning` as the labels.
+# - Go to https://grafana.sdi-1.alphahorizon.io/alerting/notifications/receivers/grafana-default-email/edit?alertmanager=grafana, enter your Email, and click on "Test". Now check your inbox, a test mail should have arrived.
+# - Go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
 ```

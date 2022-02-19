@@ -12,4 +12,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now liwasc
 ```
 
-Now visit [https://pojntfx.github.io/liwasc/](https://pojntfx.github.io/liwasc/) as we did before and use `wss://liwasc.sdi-1.alphahorizon.io/` as the backend URL (note the trailing slash!).
+Visit [https://pojntfx.github.io/liwasc/](https://pojntfx.github.io/liwasc/) as we did before and use `wss://liwasc.sdi-1.alphahorizon.io/` as the backend URL (note the trailing slash!).

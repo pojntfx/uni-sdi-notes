@@ -48,7 +48,7 @@ sudo systemctl reload apache2
 
 curl https://nextcloud.sdi-1.alphahorizon.io/ # Test the Nextcloud site
 
-# Now visit https://nextcloud.sdi-1.alphahorizon.io/index.php and create an admin account
+# Visit https://nextcloud.sdi-1.alphahorizon.io/index.php and create an admin account
 # - Set `nextcloud` as the database user
 # - Set `yourpassword` as the database password
 # - Set `nextcloud` as the database name
