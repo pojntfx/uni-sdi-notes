@@ -2,8 +2,6 @@
 
 The Secure Shell Protocol (SSH) is a cryptographic network protocol for operating network services securely over an unsecured network[^note].
 
-[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Secure_Shell](https://en.wikipedia.org/wiki/Secure_Shell))
-
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell
@@ -22,3 +20,5 @@ rm ~/.ssh/authorized_keys
 
 systemctl restart ssh
 ```
+
+[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Secure_Shell](https://en.wikipedia.org/wiki/Secure_Shell))

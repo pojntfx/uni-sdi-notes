@@ -2,8 +2,6 @@
 
 Cockpit is a web-based graphical interface for servers[^note].
 
-[^note]: From the Cockpit website, last checked 2022-02-19 ([https://cockpit-project.org/](https://cockpit-project.org/))
-
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell
@@ -15,3 +13,5 @@ sudo apt install -t bullseye-backports -y cockpit cockpit-podman cockpit-pcp
 
 curl https://cockpit.sdi-1.alphahorizon.io/ # Test Cockpit
 ```
+
+[^note]: From the Cockpit website, last checked 2022-02-19 ([https://cockpit-project.org/](https://cockpit-project.org/))

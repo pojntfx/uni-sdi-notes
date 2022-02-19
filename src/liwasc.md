@@ -2,8 +2,6 @@
 
 liwasc is a high-performance network and port scanner[^note].
 
-[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/liwasc](https://github.com/pojntfx/liwasc))
-
 ```shell
 ssh jean@sdi-1.alphahorizon.io
 
@@ -17,3 +15,5 @@ sudo systemctl enable --now liwasc
 ```
 
 Visit [https://pojntfx.github.io/liwasc/](https://pojntfx.github.io/liwasc/) as we did before and use `wss://liwasc.sdi-1.alphahorizon.io/` as the backend URL (note the trailing slash!).
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/liwasc](https://github.com/pojntfx/liwasc))

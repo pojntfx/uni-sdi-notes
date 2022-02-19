@@ -2,8 +2,6 @@
 
 Traefik (pronounced traffic) is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy[^note].
 
-[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/traefik/traefik](https://github.com/traefik/traefik))
-
 ## Manager (`sdi-1`)
 
 ```shell
@@ -440,3 +438,5 @@ curl -Lu jean:asdf https://traefik.sdi-2.alphahorizon.io/ # Test the Traefik das
 ssh -p 8443 jean@sdi-2.alphahorizon.io # Test SSH over TCP
 ssh -o ProxyCommand="openssl s_client -connect ssh.sdi-2.alphahorizon.io:443 -quiet" jean # Test SSH over TLS
 ```
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/traefik/traefik](https://github.com/traefik/traefik))

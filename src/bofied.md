@@ -2,8 +2,6 @@
 
 bofied is a network boot server[^note].
 
-[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/bofied](https://github.com/pojntfx/bofied))
-
 ```shell
 ssh jean@sdi-1.alphahorizon.io
 
@@ -27,3 +25,5 @@ Visit [https://pojntfx.github.io/bofied/](https://pojntfx.github.io/bofied/) and
 - OIDC Issuer: `https://dex.sdi-1.alphahorizon.io`
 - OIDC Client ID: `bofied`
 - OIDC Redirect URL: `https://pojntfx.github.io/bofied/`
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/bofied](https://github.com/pojntfx/bofied))
