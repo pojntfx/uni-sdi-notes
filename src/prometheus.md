@@ -41,4 +41,6 @@ scrape_configs:
 EOT
 
 sudo systemctl reload prometheus
+
+curl http://localhost:9091/metrics # Test Prometheus
 ```

@@ -17,7 +17,7 @@ sudo firewall-cmd --permanent --add-port=4011/udp
 sudo firewall-cmd --reload
 ```
 
-Now visit [https://pojntfx.github.io/bofied/](https://pojntfx.github.io/bofied/) and login using the following credentials:
+Visit [https://pojntfx.github.io/bofied/](https://pojntfx.github.io/bofied/) and login using the following credentials:
 
 - Backend URL: `https://bofied.sdi-1.alphahorizon.io/`
 - OIDC Issuer: `https://dex.sdi-1.alphahorizon.io`
