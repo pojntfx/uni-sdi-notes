@@ -43,8 +43,31 @@ scrape_configs:
 EOT
 
 sudo systemctl reload prometheus
+```
 
+The queries can now be accessed using e.g. `cURL`:
+
+```shell
 curl http://localhost:9091/metrics # Test Prometheus
+# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
+# TYPE go_gc_duration_seconds summary
+go_gc_duration_seconds{quantile="0"} 5.9355e-05
+go_gc_duration_seconds{quantile="0.25"} 8.7103e-05
+go_gc_duration_seconds{quantile="0.5"} 0.000102003
+go_gc_duration_seconds{quantile="0.75"} 0.000121168
+go_gc_duration_seconds{quantile="1"} 0.000503512
+go_gc_duration_seconds_sum 0.061645168
+go_gc_duration_seconds_count 565
+# HELP go_goroutines Number of goroutines that currently exist.
+# TYPE go_goroutines gauge
+go_goroutines 39
+# HELP go_info Information about the Go environment.
+# TYPE go_info gauge
+go_info{version="go1.15.9"} 1
+# HELP go_memstats_alloc_bytes Number of bytes allocated and still in use.
+# TYPE go_memstats_alloc_bytes gauge
+go_memstats_alloc_bytes 1.9233688e+07
+# ...
 ```
 
 [^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Prometheus\_(software)](<https://en.wikipedia.org/wiki/Prometheus_(software)>))
