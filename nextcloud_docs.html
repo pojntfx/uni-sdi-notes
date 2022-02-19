@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Docs - Uni Software Defined Infrastructure Notes</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Notes for the software defined infrastructure course at HdM Stuttgart.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Base System</li><li class="chapter-item expanded "><a href="debian.html"><strong aria-hidden="true">1.</strong> Debian</a></li><li class="chapter-item expanded "><a href="network.html"><strong aria-hidden="true">2.</strong> Network</a></li><li class="chapter-item expanded "><a href="user.html"><strong aria-hidden="true">3.</strong> User</a></li><li class="chapter-item expanded "><a href="ssh.html"><strong aria-hidden="true">4.</strong> SSH</a></li><li class="chapter-item expanded "><a href="firewalld.html"><strong aria-hidden="true">5.</strong> firewalld</a></li><li class="chapter-item expanded "><a href="apt.html"><strong aria-hidden="true">6.</strong> APT</a></li><li class="chapter-item expanded "><a href="podman.html"><strong aria-hidden="true">7.</strong> Podman</a></li><li class="chapter-item expanded "><a href="traefik.html"><strong aria-hidden="true">8.</strong> Traefik</a></li><li class="chapter-item expanded "><a href="cockpit.html"><strong aria-hidden="true">9.</strong> Cockpit</a></li><li class="chapter-item expanded affix "><li class="part-title">Cloud-Native Services</li><li class="chapter-item expanded "><a href="gitea.html"><strong aria-hidden="true">10.</strong> Gitea</a></li><li class="chapter-item expanded "><a href="dex.html"><strong aria-hidden="true">11.</strong> Dex</a></li><li class="chapter-item expanded "><a href="liwasc.html"><strong aria-hidden="true">12.</strong> liwasc</a></li><li class="chapter-item expanded "><a href="bofied.html"><strong aria-hidden="true">13.</strong> bofied</a></li><li class="chapter-item expanded affix "><li class="part-title">Traditional Services</li><li class="chapter-item expanded "><a href="dns.html"><strong aria-hidden="true">14.</strong> DNS</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="dns_docs.html"><strong aria-hidden="true">14.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="dns_exercises.html"><strong aria-hidden="true">14.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="ldap.html"><strong aria-hidden="true">15.</strong> LDAP</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ldap_docs.html"><strong aria-hidden="true">15.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="ldap_exercises.html"><strong aria-hidden="true">15.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="apache.html"><strong aria-hidden="true">16.</strong> Apache</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="apache_docs.html"><strong aria-hidden="true">16.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="apache_exercises.html"><strong aria-hidden="true">16.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="mariadb.html"><strong aria-hidden="true">17.</strong> MariaDB</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="mariadb_docs.html"><strong aria-hidden="true">17.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="mariadb_exercises.html"><strong aria-hidden="true">17.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="lam.html"><strong aria-hidden="true">18.</strong> LAM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="lam_docs.html"><strong aria-hidden="true">18.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="lam_exercises.html"><strong aria-hidden="true">18.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="nextcloud.html"><strong aria-hidden="true">19.</strong> Nextcloud</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="nextcloud_docs.html" class="active"><strong aria-hidden="true">19.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="nextcloud_exercises.html"><strong aria-hidden="true">19.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="prometheus.html"><strong aria-hidden="true">20.</strong> Prometheus</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="prometheus_docs.html"><strong aria-hidden="true">20.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="prometheus_exercises.html"><strong aria-hidden="true">20.2.</strong> Exercises</a></li></ol></li><li class="chapter-item expanded "><a href="grafana.html"><strong aria-hidden="true">21.</strong> Grafana</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="grafana_docs.html"><strong aria-hidden="true">21.1.</strong> Docs</a></li><li class="chapter-item expanded "><a href="grafana_exercises.html"><strong aria-hidden="true">21.2.</strong> Exercises</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Uni Software Defined Infrastructure Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="nextcloud-docs"><a class="header" href="#nextcloud-docs">Nextcloud Docs</a></h1>
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+
+sudo apt update
+sudo apt install -y libapache2-mod-php php-ctype php-curl php-dom php-gd php-iconv php-json php-xml php-mbstring php-posix php-simplexml php-xmlreader php-xmlwriter php-zip php-mysql php-fileinfo php-bz2 php-intl php-ldap php-ftp php-imap php-bcmath php-gmp php-exif php-apcu php-imagick php-phar ffmpeg libreoffice curl unzip
+
+sudo mysql -u root -e &quot;CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'yourpassword';&quot;
+sudo mysql -u root -e &quot;CREATE DATABASE nextcloud;&quot;
+sudo mysql -u root -e &quot;GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';&quot;
+sudo mysql -u root -e &quot;FLUSH PRIVILEGES;&quot;
+
+sudo tee /etc/php/*/apache2/php.ini &lt;&lt;'EOT'
+date.timezone = Europe/Berlin
+memory_limit = 1024M
+upload_max_filesize = 1024M
+post_max_size = 1024M
+max_execution_time = 300
+EOT
+
+curl -Lo /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-23.0.2.zip
+unzip /tmp/nextcloud.zip 'nextcloud/*' -d /tmp/nextcloud
+sudo mv /tmp/nextcloud/nextcloud/ /var/www/nextcloud.sdi-1.alphahorizon.io/
+sudo chown -R www-data:www-data /var/www/nextcloud.sdi-1.alphahorizon.io/
+sudo chmod -R 755 /var/www/nextcloud.sdi-1.alphahorizon.io/
+
+sudo tee /etc/apache2/sites-available/nextcloud.sdi-1.alphahorizon.io.conf &lt;&lt;'EOT'
+&lt;VirtualHost *:8080&gt;
+        ServerName sdi-1.alphahorizon.io
+        ServerAlias nextcloud.sdi-1.alphahorizon.io
+
+        ServerAdmin webmaster@alphahorizon.io
+        DocumentRoot /var/www/nextcloud.sdi-1.alphahorizon.io
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        &lt;Directory &quot;/var/www/nextcloud.sdi-1.alphahorizon.io&quot;&gt;
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+EOT
+sudo a2ensite nextcloud.sdi-1.alphahorizon.io
+sudo systemctl reload apache2
+
+curl https://nextcloud.sdi-1.alphahorizon.io/ # Test the Nextcloud site
+
+# Visit https://nextcloud.sdi-1.alphahorizon.io/index.php and create an admin account
+# - Set `nextcloud` as the database user
+# - Set `yourpassword` as the database password
+# - Set `nextcloud` as the database name
+# - Set `localhost:3306` as the database host
+# - Click on &quot;finish setup&quot;
+# - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/core/apps/recommended and click &quot;Install recommended apps&quot;
+# - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/settings/admin/richdocuments and select `Use the built-in CODE - Collabora Online Development Edition`
+# - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/settings/apps/installed/user_ldap and click `Enable`
+# - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/settings/admin/ldap and enter the following:
+# - Set `localhost` as the host
+# - Set `389` as the port
+# - Set `cn=admin,dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io` as the user DN
+# - Set the password from `sudo dpkg-reconfigure slapd` as the password
+# - Set `dc=ldap,dc=sdi-1,dc=alphahorizon,dc=io` as the base DN
+# - Click &quot;verify settings and count users&quot;, &quot;continue&quot;
+# - Select &quot;cn&quot; under &quot;Other Attributes&quot;
+# - Set &quot;bean&quot; as the user name and click &quot;Verify settings&quot;, &quot;continue&quot;
+# - Set `organizationUnit` under `Only these object classes:` in the groups settings
+# - Click `Verify settings and count the groups`
+# - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/login and login as bean using password &quot;password&quot; (if you can't login, go back to https://nextcloud.sdi-1.alphahorizon.io/index.php/settings/admin/ldap and verify everything again)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="nextcloud.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="nextcloud_exercises.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="nextcloud.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="nextcloud_exercises.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
