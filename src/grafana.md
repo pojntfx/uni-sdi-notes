@@ -90,4 +90,8 @@ curl https://grafana.sdi-1.alphahorizon.io/ # Test the Grafana site
 # - Go to create, import and select `4475` as the ID (https://grafana.com/grafana/dashboards/4475), go to dashboard settings and select `apache@file` as the service
 ```
 
+The Grafana dashboard should now look like the following:
+
+![Grafana dashboard for the node exporter](./assets/grafana.png)
+
 [^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Grafana](https://en.wikipedia.org/wiki/Grafana))
