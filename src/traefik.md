@@ -1,5 +1,9 @@
 # Traefik
 
+Traefik (pronounced traffic) is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy[^note].
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/traefik/traefik](https://github.com/traefik/traefik))
+
 ## Manager (`sdi-1`)
 
 ```shell

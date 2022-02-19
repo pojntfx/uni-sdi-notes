@@ -1,5 +1,9 @@
 # liwasc
 
+liwasc is a high-performance network and port scanner[^note].
+
+[^note]: From GitHub, last checked 2022-02-19 ([https://github.com/pojntfx/liwasc](https://github.com/pojntfx/liwasc))
+
 ```shell
 ssh jean@sdi-1.alphahorizon.io
 

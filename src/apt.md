@@ -1,5 +1,9 @@
 # APT
 
+Advanced package tool, or APT, is a free-software user interface that works with core libraries to handle the installation and removal of software on Debian, and Debian-based Linux distributions[^note].
+
+[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/APT\_(software)](<https://en.wikipedia.org/wiki/APT_(software)>))
+
 > Run on both `sdi-1` and `sdi-2`; adjust the values accordingly.
 
 ```shell

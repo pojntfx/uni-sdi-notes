@@ -1,5 +1,9 @@
 # Gitea
 
+Gitea is an open-source forge software package for hosting software development version control using Git as well as other collaborative features like bug tracking, wikis and code review[^note].
+
+[^note]: From Wikipedia, last checked 2022-02-19 ([https://en.wikipedia.org/wiki/Gitea](https://en.wikipedia.org/wiki/Gitea))
+
 ```shell
 ssh jean@sdi-1.alphahorizon.io
 
