@@ -146,6 +146,10 @@
 <p>Uni Software Defined Infrastructure Notes (c) 2022 Felix Pojtinger and contributors</p>
 <p>SPDX-License-Identifier: AGPL-3.0</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="debian"><a class="header" href="#debian">Debian</a></h1>
+<p>Debian, also known as Debian GNU/Linux, is a GNU/Linux distribution composed of free and open-source software, developed by the community-supported Debian Project, which was established by Ian Murdock on August 16, 1993<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Debian">https://en.wikipedia.org/wiki/Debian</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -219,6 +223,10 @@ su jean -c &quot;mkdir -m 700 -p ~/.ssh &amp;&amp; curl 'https://github.com/jean
 usermod -aG sudo jean
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ssh"><a class="header" href="#ssh">SSH</a></h1>
+<p>The Secure Shell Protocol (SSH) is a cryptographic network protocol for operating network services securely over an unsecured network<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Secure_Shell">https://en.wikipedia.org/wiki/Secure_Shell</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -238,6 +246,10 @@ rm ~/.ssh/authorized_keys
 systemctl restart ssh
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="firewalld"><a class="header" href="#firewalld">firewalld</a></h1>
+<p>firewalld is a firewall management tool for Linux operating systems<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Firewalld">https://en.wikipedia.org/wiki/Firewalld</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -252,6 +264,10 @@ sudo firewall-cmd --permanent --add-service=llmnr
 sudo firewall-cmd --reload
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="apt"><a class="header" href="#apt">APT</a></h1>
+<p>Advanced package tool, or APT, is a free-software user interface that works with core libraries to handle the installation and removal of software on Debian, and Debian-based Linux distributions<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/APT_(software)">https://en.wikipedia.org/wiki/APT_(software)</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -271,6 +287,10 @@ sudo systemctl enable --now unattended-upgrades
 sudo unattended-upgrades --debug
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="podman"><a class="header" href="#podman">Podman</a></h1>
+<p>Podman is a daemonless container engine for developing, managing, and running OCI Containers on your Linux System<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From the Podman website, last checked 2022-02-19 (<a href="https://podman.io/">https://podman.io/</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -288,6 +308,10 @@ sudo systemctl enable --now podman-auto-update.timer
 sudo systemctl enable --now podman-restart
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="traefik"><a class="header" href="#traefik">Traefik</a></h1>
+<p>Traefik (pronounced traffic) is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From GitHub, last checked 2022-02-19 (<a href="https://github.com/traefik/traefik">https://github.com/traefik/traefik</a>)</p>
+</div>
 <h2 id="manager-sdi-1"><a class="header" href="#manager-sdi-1">Manager (<code>sdi-1</code>)</a></h2>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
@@ -720,6 +744,10 @@ ssh -p 8443 jean@sdi-2.alphahorizon.io # Test SSH over TCP
 ssh -o ProxyCommand=&quot;openssl s_client -connect ssh.sdi-2.alphahorizon.io:443 -quiet&quot; jean # Test SSH over TLS
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cockpit"><a class="header" href="#cockpit">Cockpit</a></h1>
+<p>Cockpit is a web-based graphical interface for servers<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From the Cockpit website, last checked 2022-02-19 (<a href="https://cockpit-project.org/">https://cockpit-project.org/</a>)</p>
+</div>
 <blockquote>
 <p>Run on both <code>sdi-1</code> and <code>sdi-2</code>; adjust the values accordingly.</p>
 </blockquote>
@@ -732,6 +760,10 @@ sudo apt install -t bullseye-backports -y cockpit cockpit-podman cockpit-pcp
 curl https://cockpit.sdi-1.alphahorizon.io/ # Test Cockpit
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gitea"><a class="header" href="#gitea">Gitea</a></h1>
+<p>Gitea is an open-source forge software package for hosting software development version control using Git as well as other collaborative features like bug tracking, wikis and code review<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Gitea">https://en.wikipedia.org/wiki/Gitea</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo mkdir -p /var/lib/gitea
@@ -759,6 +791,10 @@ curl https://gitea.sdi-1.alphahorizon.io/ # Test Gitea
 </ul>
 <p>Note that the installation might take a while (about 1 minute)</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dex"><a class="header" href="#dex">Dex</a></h1>
+<p>Dex is an identity service that uses OpenID Connect to drive authentication for other apps<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From the Dex website, last checked 2022-02-19 (<a href="https://dexidp.io/">https://dexidp.io/</a>)</p>
+</div>
 <p>First, setup Gitea by visiting <a href="https://gitea.sdi-1.alphahorizon.io/user/settings/applications">https://gitea.sdi-1.alphahorizon.io/user/settings/applications</a> and adding a new OAuth2 application with Application Name <code>Dex</code> and Redirect URI <code>https://dex.sdi-1.alphahorizon.io/callback</code>. Note the client ID and client secret; we'll need them in the following.</p>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
@@ -817,6 +853,10 @@ sudo systemctl enable --now dex
 </ul>
 <p>And authorization prompt from Gitea and Dex should show up, after which liwasc's home page should load (showing an error like <code>Failed to construct 'WebSocket': An insecure WebSocket connection may not be initiated from a page loaded over HTTPS.</code>).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="liwasc"><a class="header" href="#liwasc">liwasc</a></h1>
+<p>liwasc is a high-performance network and port scanner<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From GitHub, last checked 2022-02-19 (<a href="https://github.com/pojntfx/liwasc">https://github.com/pojntfx/liwasc</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo mkdir -p /var/lib/liwasc
@@ -829,6 +869,10 @@ sudo systemctl enable --now liwasc
 </code></pre>
 <p>Visit <a href="https://pojntfx.github.io/liwasc/">https://pojntfx.github.io/liwasc/</a> as we did before and use <code>wss://liwasc.sdi-1.alphahorizon.io/</code> as the backend URL (note the trailing slash!).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bofied"><a class="header" href="#bofied">bofied</a></h1>
+<p>bofied is a network boot server<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From GitHub, last checked 2022-02-19 (<a href="https://github.com/pojntfx/bofied">https://github.com/pojntfx/bofied</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo mkdir -p /var/lib/bofied
@@ -852,6 +896,10 @@ sudo firewall-cmd --reload
 <li>OIDC Redirect URL: <code>https://pojntfx.github.io/bofied/</code></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dns"><a class="header" href="#dns">DNS</a></h1>
+<p>The Domain Name System (DNS) is the hierarchical and decentralized naming system used to identify computers, services, and other resources reachable through the Internet or other Internet Protocol (IP) networks<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Domain_Name_System">https://en.wikipedia.org/wiki/Domain_Name_System</a>)</p>
+</div>
 <blockquote>
 <p>You can convert the IPv6 addresses to nibble format using e.g. <a href="http://rdns6.com/nibble">rdns6.com/nibble</a></p>
 </blockquote>
@@ -1039,7 +1087,7 @@ dig +noall +answer @sdi-2.alphahorizon.io -x 2400:6180:0:d0::1020:c001
 dig +noall +answer @sdi-2.alphahorizon.io -x 143.198.37.173
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ldap"><a class="header" href="#ldap">LDAP</a></h1>
-<p>The Lightweight Directory Access Protocol is an open, vendor-neutral, industry standard application protocol for accessing and maintaining distributed directory information services over an Internet Protocol (IP) network.<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<p>The Lightweight Directory Access Protocol is an open, vendor-neutral, industry standard application protocol for accessing and maintaining distributed directory information services over an Internet Protocol (IP) network<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
 <div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
 <p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol">https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol</a>)</p>
 </div>
@@ -1883,6 +1931,10 @@ func main() {
       matrikelNr: [40062]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="apache"><a class="header" href="#apache">Apache</a></h1>
+<p>The Apache HTTP Server is a free and open-source cross-platform web server software<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Apache_HTTP_Server">https://en.wikipedia.org/wiki/Apache_HTTP_Server</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
@@ -2020,6 +2072,10 @@ curl https://secure.apache.sdi-1.alphahorizon.io/ # Try to access the secure sit
 curl -u bean:password https://secure.apache.sdi-1.alphahorizon.io/ # Access the secure site as bean (or anyone else in ou=devel,ou=software) with password &quot;password&quot; (you can also open it using a browser)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mariadb"><a class="header" href="#mariadb">MariaDB</a></h1>
+<p>MariaDB is a community-developed, commercially supported fork of the MySQL relational database management system (RDBMS), intended to remain free and open-source software under the GNU General Public License<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/MariaDB">https://en.wikipedia.org/wiki/MariaDB</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
@@ -2084,6 +2140,10 @@ curl https://phpmyadmin.sdi-1.alphahorizon.io/ # Test the phpMyAdmin site
 # Visit https://phpmyadmin.sdi-1.alphahorizon.io/ and login as root using yourpassword
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ldap-account-manager"><a class="header" href="#ldap-account-manager">LDAP Account Manager</a></h1>
+<p>LDAP Account Manager is a web application for managing various account types in an LDAP directory<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/LDAP_Account_Manager">https://en.wikipedia.org/wiki/LDAP_Account_Manager</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
@@ -2163,6 +2223,10 @@ sudo systemctl reload apache2
 # Visit https://ldap-account-manager.sdi-1.alphahorizon.io/templates/login.php and login with your the LDAP admin account password
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nextcloud"><a class="header" href="#nextcloud">Nextcloud</a></h1>
+<p>Nextcloud is a suite of client-server software for creating and using file hosting services<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Nextcloud">https://en.wikipedia.org/wiki/Nextcloud</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
@@ -2233,6 +2297,10 @@ curl https://nextcloud.sdi-1.alphahorizon.io/ # Test the Nextcloud site
 # - Visit https://nextcloud.sdi-1.alphahorizon.io/index.php/login and login as bean using password &quot;password&quot; (if you can't login, go back to https://nextcloud.sdi-1.alphahorizon.io/index.php/settings/admin/ldap and verify everything again)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="prometheus"><a class="header" href="#prometheus">Prometheus</a></h1>
+<p>Prometheus is a free software application used for event monitoring and alerting<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Prometheus_(software)">https://en.wikipedia.org/wiki/Prometheus_(software)</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
@@ -2277,6 +2345,10 @@ sudo systemctl reload prometheus
 curl http://localhost:9091/metrics # Test Prometheus
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="grafana"><a class="header" href="#grafana">Grafana</a></h1>
+<p>Grafana is a multi-platform open source analytics and interactive visualization web application<sup class="footnote-reference"><a href="#note">1</a></sup>.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p>From Wikipedia, last checked 2022-02-19 (<a href="https://en.wikipedia.org/wiki/Grafana">https://en.wikipedia.org/wiki/Grafana</a>)</p>
+</div>
 <pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
 
 sudo apt update
