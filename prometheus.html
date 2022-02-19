@@ -135,8 +135,12 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="prometheus"><a class="header" href="#prometheus">Prometheus</a></h1>
-<pre><code class="language-shell">sudo apt update
+<pre><code class="language-shell">ssh jean@sdi-1.alphahorizon.io
+
+sudo apt update
 sudo apt install -y prometheus
+
+echo 'ARGS=&quot;--web.listen-address=localhost:9091&quot;' | sudo tee /etc/default/prometheus
 
 sudo systemctl enable --now prometheus
 
