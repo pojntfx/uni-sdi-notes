@@ -10,7 +10,7 @@ If your connection was successful, your user interface should look somewhat like
 
 ![A list of entries can be seen on the left. Otherwise, the screen is empty.](./assets/ldap_connection_success.png)
 
-## Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?
+### Use a filter like (uid-xy234) to find your personal entry beneath ou=userlist,dc=hdm-stuttgart,dc=de, Use the corresponding DN e.g. uid=xy234, ou=userlist,dc=hdm-stuttgart,dc=de to reconnect using password authentication. Then browse your own entry again. Can you spot any difference?
 
 Therefore, you right-click on the userlist and apply a filter on the children. This should work like displayed in the following two pictures.
 
@@ -590,7 +590,7 @@ cd /etc
 tar zcf /root/pam.tgz pam.conf pam.d
 ```
 
-We can then check if all worked correctly:
+We can then check if everything worked properly:
 
 ```bash
 # tar ztf /root/pam.tgz 
@@ -825,8 +825,6 @@ drwxr-xr-x  2 waibel users   5 Nov 17 21:32 jakob
 uid=1337(waibel) gid=100(users) groups=100(users)
 ```
 
-TODO: Are we finished here?
-
 ## Backup and recovery/restore
 
 First, we setup a second LDAP server on `sdi1b.mi.hdm-stuttgart.de`. 
@@ -944,7 +942,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Until here, everything should work
 	BaseDN := "dc=hdm-stuttgart,dc=de"
 	Filter := fmt.Sprintf("(uid=%s)", *uid)
 	searchReq := ldap.NewSearchRequest(

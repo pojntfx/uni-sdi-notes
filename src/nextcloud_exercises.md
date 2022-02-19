@@ -7,7 +7,7 @@
 # apt -y install mariadb-server mariadb-client
 ```
 
-Configure mysql using the installation script, set a rot password, disable remote login and remove test databases.
+Configure mysql using the installation script, set a root password, disable remote login and remove test databases.
 
 ```shell
 # mysql_secure_installation
@@ -85,7 +85,7 @@ Alias /nextcloud "/var/www/nextcloud/"
 </Directory>
 ```
 
-Create a virtual new virtual host: 
+Create a new virtual host: 
 
 ```shell
 <VirtualHost *:80>
