@@ -1,21 +1,36 @@
 # MariaDB
 
 ```shell
+ssh jean@sdi-1.alphahorizon.io
+
 sudo apt update
 sudo apt install -y mariadb-server
-sudo mysql_secure_installation # Empty string, y, y, yourpassword, yourpassword, y, y, y, y
 
-sudo mysql -u root -e 'GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;'
+sudo mysql_secure_installation
+# Current password for root: Press enter
+# Switch to unix_socket authentication: y
+# Change the root password: y
+# New password: yourpassword
+# Re-enter new password: yourpassword
+# Remove anonymous users: y
+# Disallow root login remotely: y
+# Remove test database and access to it: y
+# Reload privilege tables now: y
 
-sudo apt install -y phpmyadmin libapache2-mod-php # apache2, y, yourpassword, yourpassword
-sudo phpenmod mbstring
+sudo apt install -y phpmyadmin libapache2-mod-php
+# Web server: apache2
+# Configure database: Yes
+# MySQL application password for phpmyadmin: yourpassword
+# Password confirmation: yourpassword
 
 sudo a2disconf phpmyadmin
+sudo mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;"
+sudo phpenmod mbstring
 
-sudo tee /etc/apache2/sites-available/phpmyadmin.felixs-sdi1.alphahorizon.io.conf <<'EOT'
+sudo tee /etc/apache2/sites-available/phpmyadmin.sdi-1.alphahorizon.io.conf <<'EOT'
 <VirtualHost *:8080>
-        ServerName felixs-sdi1.alphahorizon.io
-        ServerAlias phpmyadmin.felixs-sdi1.alphahorizon.io
+        ServerName sdi-1.alphahorizon.io
+        ServerAlias phpmyadmin.sdi-1.alphahorizon.io
 
         ServerAdmin webmaster@alphahorizon.io
         DocumentRoot /usr/share/phpmyadmin
@@ -43,8 +58,9 @@ sudo tee /etc/apache2/sites-available/phpmyadmin.felixs-sdi1.alphahorizon.io.con
         </Directory>
 </VirtualHost>
 EOT
-sudo a2ensite phpmyadmin.felixs-sdi1.alphahorizon.io
+sudo a2ensite phpmyadmin.sdi-1.alphahorizon.io
 sudo systemctl reload apache2
+curl https://phpmyadmin.sdi-1.alphahorizon.io/ # Test the phpMyAdmin site
 
-# Now visit https://phpmyadmin.felixs-sdi1.alphahorizon.io/ and login as root using yourpassword
+# Visit https://phpmyadmin.sdi-1.alphahorizon.io/ and login as root using yourpassword
 ```

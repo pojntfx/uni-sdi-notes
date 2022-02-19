@@ -1,8 +1,12 @@
 # Prometheus
 
 ```shell
+ssh jean@sdi-1.alphahorizon.io
+
 sudo apt update
 sudo apt install -y prometheus
+
+echo 'ARGS="--web.listen-address=localhost:9091"' | sudo tee /etc/default/prometheus
 
 sudo systemctl enable --now prometheus
 
@@ -37,4 +41,6 @@ scrape_configs:
 EOT
 
 sudo systemctl reload prometheus
+
+curl http://localhost:9091/metrics # Test Prometheus
 ```
