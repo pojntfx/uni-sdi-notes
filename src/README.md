@@ -14,6 +14,6 @@ If you like the study materials, a GitHub star is always appreciated :)
 
 ![AGPL-3.0 license badge](https://www.gnu.org/graphics/agplv3-155x51.png)
 
-Uni Software Defined Infrastructure Notes (c) 2022 Felix Pojtinger and contributors
+Uni Software Defined Infrastructure Notes (c) 2022 Felicitas Pojtinger and contributors
 
 SPDX-License-Identifier: AGPL-3.0
